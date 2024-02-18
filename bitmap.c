@@ -1,0 +1,25 @@
+#include "bitmap.h"
+
+const unsigned int spaceship_bitmap[8] = {
+    0xFF00,
+    0xFF00,
+    0xFF00,
+    0xFF00,
+    0xFFFF,
+    0xFFFF,
+    0xFFFF,
+    0xFFFF
+};
+
+
+const unsigned int alien_bitmap[8] = {
+    0xFFFF,
+    0xF00F,
+    0xFFFF,
+    0xFFFF,
+    0xF00F,
+    0xFFFF,
+    0xFFFF,
+    0xFFFF
+};
+

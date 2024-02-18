@@ -1,0 +1,50 @@
+
+Defender Game README File
+
+Course:		COMP 2659 - Computing Machinery II
+University:	Mount Royal University
+Name:		Axyl Carefoot-Schulz
+ID:			201694318
+Email:		acare318@mtroyal.ca
+
+Details:
+This is the hand-in for the second check-in containing project
+stages 2,3 and 4. 
+
+The MAKEFILE will create TOS programs that test different sections of code.
+
+
+
+PROGRAM:
+	graphicsTestDriver.tos
+
+DESCRIPTION: 
+This is the program to render basic shapes on the screen related to
+project stage II (raster).
+
+
+
+PROGRAM:
+	modelTestDriver.tos
+
+DESCRIPTION: 
+This is the program to test the model and events files created in project 
+stage III (model & events). ("modelt~1.tos >> output.txt" works well)
+
+
+
+PROGRAM:
+	renderTestDriver.tos
+
+DESCRIPTION: 
+This is the program to test the renderer module from project stage IV (renderer).
+There are some sprites rendered and moved across the screen. 
+
+
+
+Notes:
+The majority of the function documentation in the .h files.
+Confusing sections of code in the .c files were also documented. 
+
+Issues:
+- "make clean" does not work, must manually "rm *.o" and "rm *.tos".
