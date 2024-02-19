@@ -1,6 +1,7 @@
-old
 *.tos
 *.o
 *.BIN
 *.PRG
-
+first_sem
+text_adventure
+old
