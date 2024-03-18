@@ -9,7 +9,7 @@
 /* Global game model */
 GameModel model;
 
-char backBuffer[BUFFER_SIZE] __attribute__((aligned(256))); // Ensure 256-byte alignment
+char backBuffer[BUFFER_SIZE] __attribute__((aligned(256))); 
 char *frontBuffer;
 
 /* Function to get the current time from the system clock */
@@ -29,16 +29,13 @@ void wait_for_vertical_blank() {
 }
 
 int main() {
-    frontBuffer = Physbase(); // Original frame buffer
-    initModel(&model); // Initialize the game model
-    model.game_running = true; // Set game running flag
+    frontBuffer = Physbase(); 
+    initModel(&model); 
+    model.game_running = true; 
 
     unsigned long lastTime = get_time();
 
     while (model.game_running) {
-        // Poll for keyboard input (to be implemented)
-        // e.g., if (key_pressed()) { handle_key_input(&model); }
-
         unsigned long currentTime = get_time();
         if (currentTime != lastTime) {
             lastTime = currentTime;
@@ -48,23 +45,18 @@ int main() {
             move_player_shot(&model);
             move_aliens_shot(&model);
             player_shot_collides_with_alien(&model);
-            // ... additional event handling ...
 
-            // Render to back buffer
             render(&model, backBuffer);
 
-            // Flip buffers
             Setscreen(backBuffer, -1, -1);
             char *temp = frontBuffer;
             frontBuffer = backBuffer;
             backBuffer = temp;
 
-            // Wait for the next vertical blank to start rendering
             wait_for_vertical_blank();
         }
     }
 
-    // Restore original frame buffer on exit
     Setscreen(frontBuffer, -1, -1);
 
     return 0;
