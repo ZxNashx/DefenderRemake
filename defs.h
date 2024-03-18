@@ -10,6 +10,7 @@
 #define BITMAP_WIDTH 16
 #define BITMAP_HEIGHT 8
 
+#define BUFFER_SIZE 32000
 
 /* These are very arbitrary. */
 #define SHOT_COUNT 32
