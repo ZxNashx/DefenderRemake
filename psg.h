@@ -1,8 +1,7 @@
 #ifndef PSG_H
 #define PSG_H
 
-#include <stdint.h>
-
+#include "defs.h"
 /* PSG register addresses */
 #define PSG_REGISTERS ((volatile uint8_t *)0xFFFF8800)
 

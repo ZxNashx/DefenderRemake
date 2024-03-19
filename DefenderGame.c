@@ -1,24 +1,22 @@
 #include <stdio.h>
-#include <osbind.h> // For TOS system calls
+#include <osbind.h> 
 #include "model.h"
 #include "renderer.h"
 #include "events.h"
 #include "defs.h"
 #include "raster.h"
+#include "input.h"
 
 /* Global game model */
 GameModel model;
 
-char backBuffer[BUFFER_SIZE] __attribute__((aligned(256))); 
+char rawBackBuffer[BUFFER_SIZE + 256];
+char *backBuffer;
 char *frontBuffer;
 
 /* Function to get the current time from the system clock */
 unsigned long get_time() {
-    long *timer = (long *)0x462;
-    long old_ssp = Super(0);
-    unsigned long timeNow = *timer;
-    Super(old_ssp);
-    return timeNow;
+    return *((volatile unsigned long *)0x462);
 }
 
 /* Function to wait for vertical blank */
@@ -28,17 +26,38 @@ void wait_for_vertical_blank() {
     last_vblank = *((volatile unsigned long *)0x462);
 }
 
-int main() {
-    frontBuffer = Physbase(); 
-    initModel(&model); 
-    model.game_running = true; 
+/* Function to handle input */
+void handle_input(GameModel *model, char inputChar) {
+    switch (inputChar) {
+        case 'a':
+            break;
+        case 'd': 
+            break;
+    }
+}
 
+int main() {
     unsigned long lastTime = get_time();
+    unsigned long currentTime;
+    char *temp;
+
+    backBuffer = (char *)((unsigned long)(rawBackBuffer + 255) & ~0xFF);
+    frontBuffer = Physbase(); 
+
+    initModel(&model); 
+    model.game_running = true;
+
+    init_input();  
 
     while (model.game_running) {
-        unsigned long currentTime = get_time();
+        currentTime = get_time();
         if (currentTime != lastTime) {
             lastTime = currentTime;
+
+            if (input_available()) {
+                char inputChar = read_input();
+                handle_input(&model, inputChar);
+            }
 
             updateModel(&model);
             move_enemies(&model);
@@ -49,7 +68,7 @@ int main() {
             render(&model, backBuffer);
 
             Setscreen(backBuffer, -1, -1);
-            char *temp = frontBuffer;
+            temp = frontBuffer;
             frontBuffer = backBuffer;
             backBuffer = temp;
 
@@ -58,6 +77,7 @@ int main() {
     }
 
     Setscreen(frontBuffer, -1, -1);
+    cleanup_input();  
 
     return 0;
 }

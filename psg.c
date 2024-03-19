@@ -18,10 +18,11 @@ uint8_t read_psg(int reg) {
 
 /* Set the tone for a given channel */
 void set_tone(int channel, int tuning) {
+    int regOffset;
     if (channel < 0 || channel > 2) {
         return; 
     }
-    int regOffset = channel * 2;
+    regOffset = channel * 2;
     write_psg(regOffset, tuning & 0xFF);
     write_psg(regOffset + 1, (tuning >> 8));  
 }
@@ -36,11 +37,12 @@ void set_volume(int channel, int volume) {
 
 /* Enable or disable tone/noise for a channel */
 void enable_channel(int channel, int tone_on, int noise_on) {
-    /* check to se if it is a valid channel, [0,2]*/
+    uint8_t mixer;
+    /* check to see if it is a valid channel, [0,2]*/
     if (channel < 0 || channel > 2) {
         return;
     }
-    uint8_t mixer = read_psg(7); 
+    mixer = read_psg(7); 
     mixer &= ~(0x11 << channel); 
     if (!tone_on) {
         mixer |= (0x10 << channel); 
@@ -53,8 +55,9 @@ void enable_channel(int channel, int tone_on, int noise_on) {
 
 /* Stop all PSG sound production */
 void stop_sound() {
-    for (int i = 0; i < 3; ++i) {
-        set_volume(i, 0); // Mute all channels
+    int i;
+    for (i = 0; i < 3; ++i) {
+        set_volume(i, 0); 
     }
 }
 
