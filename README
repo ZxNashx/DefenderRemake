@@ -11,19 +11,6 @@ Details:
 This is the hand-in for the second check-in containing project
 stages 5,6 and 7. 
 
-The MAKEFILE will create TOS programs that test different sections of code.
-
-
-
-PROGRAM:
-	graphicsTestDriver.tos
-
-DESCRIPTION: 
-This is the program to render basic shapes on the screen related to
-project stage II (raster).
-
-
-
 
 Notes:
 

@@ -28,12 +28,7 @@ void wait_for_vertical_blank() {
 
 /* Function to handle input */
 void handle_input(GameModel *model, char inputChar) {
-    switch (inputChar) {
-        case 'a':
-            break;
-        case 'd': 
-            break;
-    }
+
 }
 
 int main() {
@@ -41,13 +36,15 @@ int main() {
     unsigned long currentTime;
     char *temp;
 
+
+    /*
+    stuff gets drawn onto the backbuffer, then swapped onto the front buffer
+    */
+
     backBuffer = (char *)((unsigned long)(rawBackBuffer + 255) & ~0xFF);
     frontBuffer = Physbase(); 
 
     initModel(&model); 
-    model.game_running = true;
-
-    init_input();  
 
     while (model.game_running) {
         currentTime = get_time();
@@ -77,7 +74,6 @@ int main() {
     }
 
     Setscreen(frontBuffer, -1, -1);
-    cleanup_input();  
 
     return 0;
 }

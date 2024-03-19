@@ -8,6 +8,5 @@ void play_effect(int effect) {
             break;
         case 2:
             break;
-
     }
 }
