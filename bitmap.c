@@ -37,8 +37,9 @@ unsigned int reverseBits(unsigned int num) {
 }
 
 /* Function to mirror alien bitmap along the y-axis */
-void mirrorBitmap(const unsigned int *bitmap, unsigned int *mirroredBitmap, size_t size) {
-    for (size_t i = 0; i < size; i++) {
+void mirrorBitmap(const unsigned int *bitmap, unsigned int *mirroredBitmap, unsigned int size) {
+    int i;
+    for (i = 0; i < size; i++) {
         mirroredBitmap[i] = reverseBits(bitmap[i]);
     }
 }

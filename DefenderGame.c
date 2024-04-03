@@ -10,21 +10,34 @@
 /* Global game model */
 GameModel model;
 
+/* buffer size is 32k */
 char rawBackBuffer[BUFFER_SIZE + 256];
 char *backBuffer;
 char *frontBuffer;
 
 /* Function to get the current time from the system clock */
-unsigned long get_time() {
-    return *((volatile unsigned long *)0x462);
+uint32_t get_time() {
+    volatile long *pointerToTimer = (volatile long *)0x462;
+    long timenow;
+    long old_ssp;
+
+    old_ssp = Super(0);      
+    timenow = *pointerToTimer;  
+    Super(old_ssp);       
+
+    return timenow;    
 }
 
-/* Function to wait for vertical blank */
-void wait_for_vertical_blank() {
-    static unsigned long last_vblank = 0;
-    while (*((volatile unsigned long *)0x462) == last_vblank);
-    last_vblank = *((volatile unsigned long *)0x462);
+
+void wait_for_vertical_blank(uint32_t last_vblank) {
+    uint32_t current_time;
+
+    do {
+        current_time = get_time();
+    } while (current_time == last_vblank);
 }
+
+
 
 /* Function to handle input */
 void handle_input(GameModel *model, char inputChar) {
@@ -32,25 +45,21 @@ void handle_input(GameModel *model, char inputChar) {
 }
 
 int main() {
-    unsigned long lastTime = get_time();
-    unsigned long currentTime;
+    uint32_t timeThen, timeNow, timeElapsed;
     char *temp;
 
-
-    /*
-    stuff gets drawn onto the backbuffer, then swapped onto the front buffer
-    */
-
-    backBuffer = (char *)((unsigned long)(rawBackBuffer + 255) & ~0xFF);
+    backBuffer = (char *)((uint32_t)(rawBackBuffer + 255) & ~0xFF);
     frontBuffer = Physbase(); 
+    Setscreen(-1, backBuffer, -1);
 
-    initModel(&model); 
+    initModel(&model);
+    timeThen = get_time(); 
 
-    while (model.game_running) {
-        currentTime = get_time();
-        if (currentTime != lastTime) {
-            lastTime = currentTime;
+    while (model.game_running == true) {
+        timeNow = get_time();
+        timeElapsed = timeNow - timeThen; 
 
+        if (timeElapsed > 0) {
             if (input_available()) {
                 char inputChar = read_input();
                 handle_input(&model, inputChar);
@@ -64,16 +73,19 @@ int main() {
 
             render(&model, backBuffer);
 
-            Setscreen(backBuffer, -1, -1);
+            Setscreen(-1, backBuffer, -1);
             temp = frontBuffer;
             frontBuffer = backBuffer;
             backBuffer = temp;
 
-            wait_for_vertical_blank();
+            wait_for_vertical_blank(timeNow);
+
+            timeThen = timeNow;
+            break;
         }
     }
-
-    Setscreen(frontBuffer, -1, -1);
+    
+    Setscreen(-1, frontBuffer, -1);
 
     return 0;
 }
