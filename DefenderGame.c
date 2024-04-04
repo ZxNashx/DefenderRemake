@@ -6,7 +6,9 @@
 #include "defs.h"
 #include "raster.h"
 #include "input.h"
-
+#include "raster.h"
+#include "bitmap.h"
+#include "defs.h"
 /* Global game model */
 GameModel model;
 
@@ -17,9 +19,9 @@ char *frontBuffer;
 
 /* Function to get the current time from the system clock */
 uint32_t get_time() {
-    volatile long *pointerToTimer = (volatile long *)0x462;
-    long timenow;
-    long old_ssp;
+    uint32_t *pointerToTimer = (volatile uint32_t *)0x462;
+    uint32_t timenow;
+    uint32_t old_ssp;
 
     old_ssp = Super(0);      
     timenow = *pointerToTimer;  
@@ -41,25 +43,46 @@ void wait_for_vertical_blank(uint32_t last_vblank) {
 
 /* Function to handle input */
 void handle_input(GameModel *model, char inputChar) {
-
+    if (inputChar == 'e' || inputChar == 'E') {
+            model->game_running = false; 
+    }
 }
 
 int main() {
+        int midX = SCREEN_WIDTH / 2;
+    int midY = SCREEN_HEIGHT / 2;
+    int spaceship_x = 50;
+    int spaceship_y = 50;
+    int alien_x = SCREEN_WIDTH - 50;
+    int alien_y = SCREEN_HEIGHT - 50;
     uint32_t timeThen, timeNow, timeElapsed;
     char *temp;
+    unsigned long *orig_buffer = Physbase();
+    /*backBuffer = (char *)((uint32_t)(rawBackBuffer + 255) & 255);*/
+        int isFront = true;
 
-    backBuffer = (char *)((uint32_t)(rawBackBuffer + 255) & ~0xFF);
+
+    backBuffer = rawBackBuffer;
+    while(( ((uint32_t)backBuffer)& 255) != 0)
+    {
+        backBuffer++;
+    }
+
+    /*backBuffer = (char *)  (rawBackBuffer + (256 -  (((uint32_t)rawBackBuffer)) & 255))));*/
     frontBuffer = Physbase(); 
+
     Setscreen(-1, backBuffer, -1);
 
     initModel(&model);
     timeThen = get_time(); 
 
+
+
     while (model.game_running == true) {
         timeNow = get_time();
         timeElapsed = timeNow - timeThen; 
 
-        if (timeElapsed > 0) {
+        if (timeElapsed > 3) {
             if (input_available()) {
                 char inputChar = read_input();
                 handle_input(&model, inputChar);
@@ -71,21 +94,28 @@ int main() {
             move_aliens_shot(&model);
             player_shot_collides_with_alien(&model);
 
-            render(&model, backBuffer);
 
-            Setscreen(-1, backBuffer, -1);
-            temp = frontBuffer;
-            frontBuffer = backBuffer;
-            backBuffer = temp;
+            if(isFront == true){
+                clear_black(frontBuffer);
+                isFront = false;
+                render(&model, frontBuffer);
+                Setscreen(-1, frontBuffer, -1);
+            }else{
+                clear_black(backBuffer);
+                isFront = true;
+                render(&model, backBuffer);
+                Setscreen(-1, backBuffer, -1);
+            }
 
-            wait_for_vertical_blank(timeNow);
+
+            Vsync();
 
             timeThen = timeNow;
-            break;
         }
     }
+
     
-    Setscreen(-1, frontBuffer, -1);
+    Setscreen(-1, orig_buffer, -1);
 
     return 0;
 }
