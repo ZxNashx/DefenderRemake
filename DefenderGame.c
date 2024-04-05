@@ -49,7 +49,7 @@ int main() {
 
 
     backBuffer = rawBackBuffer;
-    while(( ((uint32_t)backBuffer)& 255) != 0){
+    while(( ((uint32_t)backBuffer) & 255) != 0){
         backBuffer++;
     }
 
@@ -60,41 +60,38 @@ int main() {
 
     initModel(&model);
     timeThen = get_time(); 
-
-
-
+    clear_black(frontBuffer);
+    clear_black(backBuffer);
+    
     while (model.game_running == true) {
         timeNow = get_time();
         timeElapsed = timeNow - timeThen; 
+        if (input_available()) {
+            char inputChar = read_input();
+            handle_input(&model, inputChar);
+        }else{
+            freeze_player(&model);
+        }
 
         if (timeElapsed >= 1) {
-            if (input_available()) {
-                char inputChar = read_input();
-                handle_input(&model, inputChar);
-            }
-
             updateModel(&model);
-
             if(isFront == true){
-                clear_black(frontBuffer);
                 isFront = false;
                 render(&model, frontBuffer);
                 Setscreen(-1, frontBuffer, -1);
             }else{
-                clear_black(backBuffer);
                 isFront = true;
                 render(&model, backBuffer);
                 Setscreen(-1, backBuffer, -1);
             }
 
+            timeThen = timeNow;
 
             Vsync();
-
-            timeThen = timeNow;
         }
     }
 
-    
+    /* return screen to original state */
     Setscreen(-1, orig_buffer, -1);
 
     return 0;

@@ -7,7 +7,6 @@
 int input_available() {
     return Cconis();
 }
-
 unsigned int read_input() {
     if (input_available()) {
         return Cnecin();  
@@ -22,9 +21,11 @@ void handle_input(GameModel *model, unsigned int input) {
 
     if (lowByte == 'a' || lowByte == 'A') {
         /* make ship face left */
+        move_left(model);
     }
     else if (lowByte == 'd' || lowByte == 'D') {
         /* make ship face right */
+        move_right(model);
     }
     else if (lowByte == 'w' || lowByte == 'W') {
         /* move ship upwards */
@@ -42,5 +43,8 @@ void handle_input(GameModel *model, unsigned int input) {
     }
     else if (lowByte == 'q' || lowByte == 'Q') {
         quit_game(model);
+    }
+    while(read_input() != 0){
+        /* flush the input buffer */
     }
 }

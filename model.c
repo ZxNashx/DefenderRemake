@@ -6,11 +6,15 @@ void initModel(GameModel *model) {
     int i;
     model->player.x = 320; 
     model->player.y = 200; 
-    model->player.dx = 0;
+    
     model->player.dy = 0;
     model->player.lives = 3; 
     model->player.score = 0;
     model->game_running = true;
+
+    /* default x direction*/
+    model->player.speed = 4;
+    model->player.dx = model->player.speed;
 
 
     /* initialize all the arrays in the game model */
@@ -60,7 +64,7 @@ void updateModel(GameModel *model) {
 }
 
 void movePlayer(Player *player){
-    player->x += player->dx;
+    /* player will only move vertically */
     player->y += player->dy;
 }
 

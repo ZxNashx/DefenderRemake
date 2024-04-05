@@ -13,8 +13,8 @@
 #define BUFFER_SIZE 32000
 
 /* These are very arbitrary. */
-#define SHOT_COUNT 32
-#define ENTITY_COUNT 16
+#define SHOT_COUNT 256
+#define ENTITY_COUNT 256
 
 
 typedef unsigned char uint8_t; 

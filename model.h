@@ -25,6 +25,7 @@ typedef struct {
 
      */
     int dy; /* y velocity */
+    unsigned int speed;
 } Player;
 
 /*
