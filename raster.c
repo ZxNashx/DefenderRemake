@@ -22,19 +22,22 @@ void plot_pixel(char *base, int x, int y, int black) {
 }
 
 void clear_black(char *base) {
-    /*
-    An attempt was made to clear the screen using assembly. 
-    It did not work as I want the background to be black.
-    _clear_screen();*/
-
-    int x, y;  
+    int y, x;
+    int longsPerLine = SCREEN_WIDTH / 32;
+    unsigned long black = 0xFFFFFFFF;
 
     for (y = 0; y < SCREEN_HEIGHT; y++) {
-        for (x = 0; x < SCREEN_WIDTH / 8; x++) {
-            base[y * 80 + x] = 0xFF; 
+        unsigned long* lineBase = (unsigned long*)(base + y * (SCREEN_WIDTH / 8));
+
+        for (x = 0; x < longsPerLine; x += 4) {
+            lineBase[x] = black;
+            if (x + 1 < longsPerLine) lineBase[x + 1] = black;
+            if (x + 2 < longsPerLine) lineBase[x + 2] = black;
+            if (x + 3 < longsPerLine) lineBase[x + 3] = black;
         }
     }
 }
+
 
 void draw_hline(char *base, int x1, int x2, int y) {
     int x;  /* Declare variable at the start of the function */

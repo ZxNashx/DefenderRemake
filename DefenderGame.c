@@ -38,7 +38,11 @@ void wait_for_vertical_blank(uint32_t last_vblank) {
         current_time = get_time();
     } while (current_time == last_vblank);
 }
-
+void swapBuffers(char **frontBuffer, char **backBuffer) {
+    char *temp = *frontBuffer;
+    *frontBuffer = *backBuffer;
+    *backBuffer = temp;
+}
 int main() {
 
     uint32_t timeThen, timeNow, timeElapsed;
@@ -75,15 +79,11 @@ int main() {
 
         if (timeElapsed >= 1) {
             updateModel(&model);
-            if(isFront == true){
-                isFront = false;
-                render(&model, frontBuffer);
-                Setscreen(-1, frontBuffer, -1);
-            }else{
-                isFront = true;
-                render(&model, backBuffer);
-                Setscreen(-1, backBuffer, -1);
-            }
+            clear_black(backBuffer);
+            render(&model, backBuffer);
+            Setscreen(-1, backBuffer, -1);
+
+            swapBuffers(&frontBuffer, &backBuffer);
 
             timeThen = timeNow;
 
