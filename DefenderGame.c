@@ -39,32 +39,17 @@ void wait_for_vertical_blank(uint32_t last_vblank) {
     } while (current_time == last_vblank);
 }
 
-
-
-/* Function to handle input */
-void handle_input(GameModel *model, char inputChar) {
-    if (inputChar == 'e' || inputChar == 'E') {
-            model->game_running = false; 
-    }
-}
-
 int main() {
-        int midX = SCREEN_WIDTH / 2;
-    int midY = SCREEN_HEIGHT / 2;
-    int spaceship_x = 50;
-    int spaceship_y = 50;
-    int alien_x = SCREEN_WIDTH - 50;
-    int alien_y = SCREEN_HEIGHT - 50;
+
     uint32_t timeThen, timeNow, timeElapsed;
     char *temp;
     unsigned long *orig_buffer = Physbase();
     /*backBuffer = (char *)((uint32_t)(rawBackBuffer + 255) & 255);*/
-        int isFront = true;
+    short isFront = true;
 
 
     backBuffer = rawBackBuffer;
-    while(( ((uint32_t)backBuffer)& 255) != 0)
-    {
+    while(( ((uint32_t)backBuffer)& 255) != 0){
         backBuffer++;
     }
 
@@ -82,18 +67,13 @@ int main() {
         timeNow = get_time();
         timeElapsed = timeNow - timeThen; 
 
-        if (timeElapsed > 3) {
+        if (timeElapsed >= 1) {
             if (input_available()) {
                 char inputChar = read_input();
                 handle_input(&model, inputChar);
             }
 
             updateModel(&model);
-            move_enemies(&model);
-            move_player_shot(&model);
-            move_aliens_shot(&model);
-            player_shot_collides_with_alien(&model);
-
 
             if(isFront == true){
                 clear_black(frontBuffer);

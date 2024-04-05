@@ -6,6 +6,8 @@ void initModel(GameModel *model) {
     int i;
     model->player.x = 320; 
     model->player.y = 200; 
+    model->player.dx = 0;
+    model->player.dy = 0;
     model->player.lives = 3; 
     model->player.score = 0;
     model->game_running = true;
@@ -61,6 +63,7 @@ void movePlayer(Player *player){
     player->x += player->dx;
     player->y += player->dy;
 }
+
 void moveAlien(Alien *alien) {
     alien->x += alien->dx;
     alien->y += alien->dy;

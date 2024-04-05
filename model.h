@@ -20,7 +20,10 @@ typedef struct {
     unsigned int x, y;  
     unsigned int lives; 
     unsigned int score; 
-    int dx; /* x velocity */
+    int dx; /* x velocity,
+    used for speed of aliens
+
+     */
     int dy; /* y velocity */
 } Player;
 
