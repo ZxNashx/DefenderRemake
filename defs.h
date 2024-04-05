@@ -13,8 +13,8 @@
 #define BUFFER_SIZE 32000
 
 /* These are very arbitrary. */
-#define SHOT_COUNT 32
-#define ENTITY_COUNT 16
+#define SHOT_COUNT 256
+#define ENTITY_COUNT 256
 
 
 typedef unsigned char uint8_t; 
@@ -24,5 +24,11 @@ typedef unsigned int uint16_t;
 typedef long int32_t;      
 typedef unsigned long uint32_t; 
 
+/* keys */
+#define SCAN_CODE_LEFT_ARROW  0x4B
+#define SCAN_CODE_RIGHT_ARROW 0x4D
+#define SCAN_CODE_UP_ARROW    0x48
+#define SCAN_CODE_DOWN_ARROW  0x50
+#define SCAN_CODE_SPACE       0x39
 
 #endif

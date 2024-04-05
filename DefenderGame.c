@@ -6,74 +6,93 @@
 #include "defs.h"
 #include "raster.h"
 #include "input.h"
-
+#include "raster.h"
+#include "bitmap.h"
+#include "defs.h"
 /* Global game model */
 GameModel model;
 
+/* buffer size is 32k */
 char rawBackBuffer[BUFFER_SIZE + 256];
 char *backBuffer;
 char *frontBuffer;
 
 /* Function to get the current time from the system clock */
-unsigned long get_time() {
-    return *((volatile unsigned long *)0x462);
+uint32_t get_time() {
+    uint32_t *pointerToTimer = (volatile uint32_t *)0x462;
+    uint32_t timenow;
+    uint32_t old_ssp;
+
+    old_ssp = Super(0);      
+    timenow = *pointerToTimer;  
+    Super(old_ssp);       
+
+    return timenow;    
 }
 
-/* Function to wait for vertical blank */
-void wait_for_vertical_blank() {
-    static unsigned long last_vblank = 0;
-    while (*((volatile unsigned long *)0x462) == last_vblank);
-    last_vblank = *((volatile unsigned long *)0x462);
-}
 
-/* Function to handle input */
-void handle_input(GameModel *model, char inputChar) {
+void wait_for_vertical_blank(uint32_t last_vblank) {
+    uint32_t current_time;
 
+    do {
+        current_time = get_time();
+    } while (current_time == last_vblank);
 }
 
 int main() {
-    unsigned long lastTime = get_time();
-    unsigned long currentTime;
+
+    uint32_t timeThen, timeNow, timeElapsed;
     char *temp;
+    unsigned long *orig_buffer = Physbase();
+    /*backBuffer = (char *)((uint32_t)(rawBackBuffer + 255) & 255);*/
+    short isFront = true;
 
 
-    /*
-    stuff gets drawn onto the backbuffer, then swapped onto the front buffer
-    */
+    backBuffer = rawBackBuffer;
+    while(( ((uint32_t)backBuffer) & 255) != 0){
+        backBuffer++;
+    }
 
-    backBuffer = (char *)((unsigned long)(rawBackBuffer + 255) & ~0xFF);
+    /*backBuffer = (char *)  (rawBackBuffer + (256 -  (((uint32_t)rawBackBuffer)) & 255))));*/
     frontBuffer = Physbase(); 
 
-    initModel(&model); 
+    Setscreen(-1, backBuffer, -1);
 
-    while (model.game_running) {
-        currentTime = get_time();
-        if (currentTime != lastTime) {
-            lastTime = currentTime;
+    initModel(&model);
+    timeThen = get_time(); 
+    clear_black(frontBuffer);
+    clear_black(backBuffer);
+    
+    while (model.game_running == true) {
+        timeNow = get_time();
+        timeElapsed = timeNow - timeThen; 
+        if (input_available()) {
+            char inputChar = read_input();
+            handle_input(&model, inputChar);
+        }else{
+            freeze_player(&model);
+        }
 
-            if (input_available()) {
-                char inputChar = read_input();
-                handle_input(&model, inputChar);
+        if (timeElapsed >= 1) {
+            updateModel(&model);
+            if(isFront == true){
+                isFront = false;
+                render(&model, frontBuffer);
+                Setscreen(-1, frontBuffer, -1);
+            }else{
+                isFront = true;
+                render(&model, backBuffer);
+                Setscreen(-1, backBuffer, -1);
             }
 
-            updateModel(&model);
-            move_enemies(&model);
-            move_player_shot(&model);
-            move_aliens_shot(&model);
-            player_shot_collides_with_alien(&model);
+            timeThen = timeNow;
 
-            render(&model, backBuffer);
-
-            Setscreen(backBuffer, -1, -1);
-            temp = frontBuffer;
-            frontBuffer = backBuffer;
-            backBuffer = temp;
-
-            wait_for_vertical_blank();
+            Vsync();
         }
     }
 
-    Setscreen(frontBuffer, -1, -1);
+    /* return screen to original state */
+    Setscreen(-1, orig_buffer, -1);
 
     return 0;
 }

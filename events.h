@@ -150,7 +150,7 @@ Arguments:
 Description:
     Checks the player's lives and handles the game over logic.
 */
-void player_runs_out_of_lives(GameModel *model);
+int player_runs_out_of_lives(GameModel *model);
 
 /*
 Function: player_collides_with_alien
@@ -160,5 +160,7 @@ Description:
     Handles the collision between the player's ship and an alien ship.
 */
 void player_collides_with_alien(GameModel *model);
+
+void freeze_player(GameModel *model);
 
 #endif /* EVENTS_H */

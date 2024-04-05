@@ -37,10 +37,10 @@ $(RENDERERDRIVER_OBJ): $(RENDERERDRIVER_SRC) bitmap.h raster.h renderer.h model.
 	$(CC) $(CFLAGS) -c $(RENDERERDRIVER_SRC)
 
 # Compile defender game
-defend~1.tos: $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o
-	$(CC) $(CFLAGS) $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o -o defend~1.tos
+defend~1.tos: $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o
+	$(CC) $(CFLAGS) $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o -o defend~1.tos
 
-$(DEFENDERGAME_OBJ): $(DEFENDERGAME_SRC) bitmap.h raster.h renderer.h model.h events.h defs.h psg.h
+$(DEFENDERGAME_OBJ): $(DEFENDERGAME_SRC) bitmap.h raster.h renderer.h model.h events.h defs.h psg.h input.h
 	$(CC) $(CFLAGS) -c $(DEFENDERGAME_SRC)
 
 # Compile soundDriver program
@@ -49,6 +49,9 @@ soundd~1.tos: $(SOUNDDRIVER_OBJ) psg.o
 
 $(SOUNDDRIVER_OBJ): $(SOUNDDRIVER_SRC) psg.h
 	$(CC) $(CFLAGS) -c $(SOUNDDRIVER_SRC)
+
+input.o: input.c input.h 
+	$(CC) $(CFLAGS) -c input.c
 
 # Other object files
 bitmap.o: bitmap.c bitmap.h
@@ -69,6 +72,9 @@ events.o: events.c events.h
 psg.o: psg.c psg.h
 	$(CC) $(CFLAGS) -c psg.c
 
+
 # Clean target to remove built files
 clean:
-	rm *.o *.tos
+	-rm -f *.o *.tos
+
+

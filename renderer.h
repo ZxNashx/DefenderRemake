@@ -33,6 +33,7 @@ Description:
     Renders an alien's spaceship on the screen.
 */
 void renderAlien(Alien *alien, char *base);
+void renderShot(char *base, unsigned int x, unsigned int y);
 
 /*
 Function: render

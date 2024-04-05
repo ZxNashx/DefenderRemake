@@ -4,13 +4,22 @@
 
 #include "defs.h"
 #include "model.h"
+#include "bitmap.h"
 #include "events.h"
-
-/* Move player's ship to the left */
 void move_left(GameModel *model) {
-    /* Decrease player's x-coordinate */
-    model->player.x += model->player.dx;
-    /* Ensure the player doesn't move off-screen */
+    unsigned int tempBitmap[8];
+    int i;
+
+    /* Check if current dx is not already moving left (negative speed) */
+    if (model->player.dx >= 0) {
+        mirrorBitmap(spaceship_bitmap, tempBitmap, 8);
+        for (i = 0; i < 8; i++) {
+            spaceship_bitmap[i] = tempBitmap[i];
+        }
+    }
+
+    /* Set dx to move left */
+    model->player.dx = -model->player.speed;
     if (model->player.x < 0) {
         model->player.x = 0;
     }
@@ -21,35 +30,50 @@ all dx/dy could be + or -, so they are
 just added to the position
 */
 
-/* Move player's ship to the right */
 void move_right(GameModel *model) {
-    /* Increase player's x-coordinate */
-    model->player.x += model->player.dx;
+    unsigned int tempBitmap[8];
+    int i;
+
+    /* Check if current dx is not already moving right (positive speed) */
+    if (model->player.dx <= 0) {
+        mirrorBitmap(spaceship_bitmap, tempBitmap, 8);
+        for (i = 0; i < 8; i++) {
+            spaceship_bitmap[i] = tempBitmap[i];
+        }
+    }
+
+    /* Set dx to move right */
+    model->player.dx = model->player.speed;
+    if (model->player.x > SCREEN_WIDTH - BITMAP_WIDTH) {
+        model->player.x = SCREEN_WIDTH - BITMAP_WIDTH;
+    }
+}
+
+void freeze_player(GameModel *model){
+	model->player.dy = 0;
+}
+
+/* Move player's ship downwards */
+void move_down(GameModel *model) {
+    /* Increase player's y-coordinate */
+    model->player.dy = model->player.speed;
     /* Ensure the player doesn't move off-screen */
-    if (model->player.x > SCREEN_WIDTH) {
-        model->player.x = SCREEN_WIDTH;
+    if (model->player.y > SCREEN_HEIGHT) {
+        model->player.y = SCREEN_HEIGHT;
     }
 }
 
 /* Move player's ship upwards */
 void move_up(GameModel *model) {
     /* Decrease player's y-coordinate */
-    model->player.y += model->player.dy;
+    model->player.dy = -model->player.speed;
     /* Ensure the player doesn't move off-screen */
     if (model->player.y < 0) {
         model->player.y = 0;
     }
 }
 
-/* Move player's ship downwards */
-void move_down(GameModel *model) {
-    /* Increase player's y-coordinate */
-    model->player.y += model->player.dy;
-    /* Ensure the player doesn't move off-screen */
-    if (model->player.y > SCREEN_HEIGHT) {
-        model->player.y = SCREEN_HEIGHT;
-    }
-}
+
 
 /* Player shoots a projectile */
 void shoot(GameModel *model) {
@@ -173,19 +197,18 @@ void alien_shot_out_of_screen(GameModel *model) {
     		model->alienShots[i].x < 0 ||
     		model->alienShots[i].y > SCREEN_HEIGHT ||
     		model->alienShots[i].y < 0)){
-    		printf("Bullet out of bounds");
     		model->alienShots[i].active = false;
     	}
     }
 }
 
 /* Handle the player running out of lives */
-void player_runs_out_of_lives(GameModel *model) {
+int player_runs_out_of_lives(GameModel *model) {
     /* Check player's lives and handle game over logic */
     if(model->player.lives <= 0){
-    	printf("Player is dead.");
+    	return true;
     }else{
-    	printf("Player is alive");
+    	return false;
     }
 }
 
