@@ -21,20 +21,15 @@ void plot_pixel(char *base, int x, int y, int black) {
     }
 }
 
+
+
+/* magic */
 void clear_black(char *base) {
-    int y, x;
-    int longsPerLine = SCREEN_WIDTH / 32;
     unsigned long black = 0xFFFFFFFF;
-
-    for (y = 0; y < SCREEN_HEIGHT; y++) {
-        unsigned long* lineBase = (unsigned long*)(base + y * (SCREEN_WIDTH / 8));
-
-        for (x = 0; x < longsPerLine; x += 4) {
-            lineBase[x] = black;
-            if (x + 1 < longsPerLine) lineBase[x + 1] = black;
-            if (x + 2 < longsPerLine) lineBase[x + 2] = black;
-            if (x + 3 < longsPerLine) lineBase[x + 3] = black;
-        }
+    unsigned int totalLongs = (SCREEN_WIDTH / 32) * SCREEN_HEIGHT;
+    unsigned int i;
+    for (i = 0; i < totalLongs; i++) {
+        ((unsigned long*)base)[i] = black;
     }
 }
 
