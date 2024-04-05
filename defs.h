@@ -30,5 +30,6 @@ typedef unsigned long uint32_t;
 #define SCAN_CODE_UP_ARROW    0x48
 #define SCAN_CODE_DOWN_ARROW  0x50
 #define SCAN_CODE_SPACE       0x39
+#define MUSIC_UPDATE_INTERVAL 14
 
 #endif

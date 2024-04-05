@@ -22,11 +22,10 @@ void plot_pixel(char *base, int x, int y, int black) {
 }
 
 
-
 /* magic */
 void clear_black(char *base) {
     unsigned long black = 0xFFFFFFFF;
-    unsigned int totalLongs = (SCREEN_WIDTH / 32) * SCREEN_HEIGHT;
+    unsigned int totalLongs = (SCREEN_WIDTH >> 5) * SCREEN_HEIGHT;
     unsigned int i;
     for (i = 0; i < totalLongs; i++) {
         ((unsigned long*)base)[i] = black;
