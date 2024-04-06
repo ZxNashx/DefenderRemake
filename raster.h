@@ -1,13 +1,6 @@
 #ifndef RASTER_H
 #define RASTER_H
 
-/*
-Function: _clear_screen
-Description:
-    Clears the entire screen in black.
-    This is a non-working assembly external reference. 
-*/
-extern void _clear_screen(void);
 
 /*
 Function: plot_pixel

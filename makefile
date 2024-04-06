@@ -1,6 +1,6 @@
 # Variables
 CC=cc68x
-CFLAGS=-g
+CFLAGS=-g -v
 GRAPHICSDRIVER_SRC=graphi~1.c
 GRAPHICSDRIVER_OBJ=graphi~1.o
 MODELDRIVER_SRC=modelt~1.c
@@ -13,35 +13,28 @@ SOUNDDRIVER_SRC=soundd~1.c
 SOUNDDRIVER_OBJ=soundd~1.o
 
 # All targets
-all: graphi~1.tos modelt~1.tos render~1.tos defend~1.tos #soundd~1.tos
+all: defend~1.tos #graphi~1.tos modelt~1.tos render~1.tos soundd~1.tos
 
 # Compile graphicsTestDriver program
-graphi~1.tos: $(GRAPHICSDRIVER_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o helper.o
-	$(CC) $(CFLAGS) $(GRAPHICSDRIVER_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o helper.o -o graphi~1.tos
+#graphi~1.tos: $(GRAPHICSDRIVER_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o helper.o
+#	$(CC) $(CFLAGS) $(GRAPHICSDRIVER_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o helper.o -o graphi~1.tos
 
-$(GRAPHICSDRIVER_OBJ): $(GRAPHICSDRIVER_SRC) bitmap.h raster.h renderer.h model.h events.h defs.h psg.h helper.h
-	$(CC) $(CFLAGS) -c $(GRAPHICSDRIVER_SRC)
+#$(GRAPHICSDRIVER_OBJ): $(GRAPHICSDRIVER_SRC) bitmap.h raster.h renderer.h model.h events.h defs.h psg.h helper.h
+#	$(CC) $(CFLAGS) -c $(GRAPHICSDRIVER_SRC)
 
 # Compile modelTestDriver program
-modelt~1.tos: $(MODELDRIVER_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o music.o helper.o
-	$(CC) $(CFLAGS) $(MODELDRIVER_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o music.o helper.o -o modelt~1.tos
+#modelt~1.tos: $(MODELDRIVER_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o music.o helper.o
+#	$(CC) $(CFLAGS) $(MODELDRIVER_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o music.o helper.o -o modelt~1.tos
 
-$(MODELDRIVER_OBJ): $(MODELDRIVER_SRC) bitmap.h raster.h renderer.h model.h events.h defs.h psg.h music.h helper.h
-	$(CC) $(CFLAGS) -c $(MODELDRIVER_SRC)
+#$(MODELDRIVER_OBJ): $(MODELDRIVER_SRC) bitmap.h raster.h renderer.h model.h events.h defs.h psg.h music.h helper.h
+#	$(CC) $(CFLAGS) -c $(MODELDRIVER_SRC)
 
 # Compile rendererTestDriver program
-render~1.tos: $(RENDERERDRIVER_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o music.o helper.o
-	$(CC) $(CFLAGS) $(RENDERERDRIVER_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o music.o helper.o -o render~1.tos
+#render~1.tos: $(RENDERERDRIVER_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o music.o helper.o
+#	$(CC) $(CFLAGS) $(RENDERERDRIVER_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o music.o helper.o -o render~1.tos
 
-$(RENDERERDRIVER_OBJ): $(RENDERERDRIVER_SRC) bitmap.h raster.h renderer.h model.h events.h defs.h psg.h music.h helper.h
-	$(CC) $(CFLAGS) -c $(RENDERERDRIVER_SRC)
-
-# Compile defender game
-defend~1.tos: $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o music.o helper.o
-	$(CC) $(CFLAGS) $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o music.o helper.o -o defend~1.tos
-
-$(DEFENDERGAME_OBJ): $(DEFENDERGAME_SRC) bitmap.h raster.h renderer.h model.h events.h defs.h psg.h input.h music.h helper.h
-	$(CC) $(CFLAGS) -c $(DEFENDERGAME_SRC)
+#$(RENDERERDRIVER_OBJ): $(RENDERERDRIVER_SRC) bitmap.h raster.h renderer.h model.h events.h defs.h psg.h music.h helper.h
+#	$(CC) $(CFLAGS) -c $(RENDERERDRIVER_SRC)
 
 # Compile soundDriver program
 #soundd~1.tos: $(SOUNDDRIVER_OBJ) psg.o music.o effects.o helper.o
@@ -69,9 +62,6 @@ renderer.o: renderer.c renderer.h
 model.o: model.c model.h
 	$(CC) $(CFLAGS) -c model.c
 
-events.o: events.c events.h
-	$(CC) $(CFLAGS) -c events.c
-
 psg.o: psg.c psg.h
 	$(CC) $(CFLAGS) -c psg.c
 
@@ -80,6 +70,17 @@ effects.o: effects.c effects.h
 
 music.o: music.c music.h
 	$(CC) $(CFLAGS) -c music.c
+
+events.o: events.c events.h
+	$(CC) $(CFLAGS) -c events.c
+
+
+# Compile defender game
+defend~1.tos: $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o music.o helper.o effects.o 
+	$(CC) $(CFLAGS) $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o psg.o input.o music.o helper.o effects.o events.o -o defend~1.tos
+
+$(DEFENDERGAME_OBJ): $(DEFENDERGAME_SRC) bitmap.h raster.h renderer.h model.h defs.h psg.h music.h helper.h events.h input.h
+	$(CC) $(CFLAGS) -c $(DEFENDERGAME_SRC)
 
 # Clean target to remove built files
 clean:

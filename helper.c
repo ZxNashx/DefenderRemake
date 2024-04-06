@@ -12,3 +12,13 @@ uint32_t get_time() {
 
     return timenow;    
 }
+
+/**
+ * Function to check if a point is within a box.
+ */
+int hit_detection(int point_x, int point_y, 
+                        int box_x, int box_y, 
+                        int box_width, int box_height) {
+    return (point_x >= box_x && point_x <= (box_x + box_width) &&
+            point_y >= box_y && point_y <= (box_y + box_height));
+}

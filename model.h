@@ -17,7 +17,7 @@ Fields:
     int dy: Vertical velocity of the player.
 */
 typedef struct {
-    unsigned int x, y;  
+    int x, y;  
     unsigned int lives; 
     unsigned int score; 
     int dx; /* x velocity,
@@ -26,6 +26,7 @@ typedef struct {
      */
     int dy; /* y velocity */
     unsigned int speed;
+    int empty;
 } Player;
 
 /*
@@ -40,8 +41,8 @@ Fields:
     int empty: Padding to make struct size even.
 */
 typedef struct {
-    unsigned int x, y;   
-    unsigned int active; 
+    int x, y;   
+    unsigned short active; 
     int dx; 
     int dy; 
     int empty; 
@@ -74,11 +75,9 @@ Fields:
     int empty: Padding to make struct size even.
 */
 typedef struct {
-    unsigned int x, y;
-    unsigned int active;
+    int x, y;
+    unsigned short active;
     int dx;
-    int dy;
-    int empty;
 } AlienShot;
 
 /*
@@ -91,7 +90,9 @@ Fields:
     AlienShot alienShots[SHOT_COUNT]: Array of shots fired by aliens.
     PlayerShot playerShots[SHOT_COUNT]: Array of shots fired by the player.
     int game_running: Flag indicating if the game is currently running.
-    int empty: Padding to make struct size even.
+    void (*currentSoundEffect)(): Pointer to function for current sound effect.
+    int currentSoundEffectDuration: Duration of the current sound effect in milliseconds.
+    int isMuted: Determine if you play sound/
 */
 typedef struct {
     Player player;
@@ -99,9 +100,10 @@ typedef struct {
     AlienShot alienShots[SHOT_COUNT];
     PlayerShot playerShots[SHOT_COUNT];
     int game_running;
-    int empty;
+    void (*currentSoundEffect)(); 
+    int currentSoundEffectDuration;  
+    int isMuted;
 } GameModel;
-
 
 
 /* Function prototypes for initializing and updating the game model */

@@ -1,6 +1,7 @@
-
+    
 #include "model.h"
 #include "defs.h"
+#include "events.h"
 
 void initModel(GameModel *model) {
     int i;
@@ -11,6 +12,7 @@ void initModel(GameModel *model) {
     model->player.lives = 3; 
     model->player.score = 0;
     model->game_running = true;
+    model->isMuted = true;
 
     /* default x direction*/
     model->player.speed = 4;
@@ -22,6 +24,8 @@ void initModel(GameModel *model) {
     for (i = 0; i < ENTITY_COUNT; i++) {
         model->aliens[i].x = 0;
         model->aliens[i].y = 0;
+        model->aliens[i].dx = 0;
+        model->aliens[i].dy = 0;
         model->aliens[i].active = false;
     }
     for (i = 0; i < SHOT_COUNT; i++) {
@@ -35,12 +39,12 @@ void initModel(GameModel *model) {
         model->alienShots[i].y = 0;
         model->alienShots[i].active = false;
         model->alienShots[i].dx = 0;
-        model->alienShots[i].dy = 0;
     }
 }
 
 void updateModel(GameModel *model) {
     int i;
+
 
     movePlayer(&model->player);
 
@@ -61,6 +65,11 @@ void updateModel(GameModel *model) {
             movePlayerShot(&model->playerShots[i]);
         }
     }
+
+    /* updates */
+    move_enemies(model);
+    player_shot_out_of_screen(model);
+    player_shot_collides_with_alien(model);
 }
 
 void movePlayer(Player *player){
@@ -75,7 +84,6 @@ void moveAlien(Alien *alien) {
 
 void moveAlienShot(AlienShot *as) {
     as->x += as->dx;
-    as->y += as->dy;
 }
 
 void movePlayerShot(PlayerShot *ps) {

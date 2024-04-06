@@ -5,7 +5,10 @@
 #include "defs.h"
 #include "model.h"
 #include "bitmap.h"
+#include "effects.h"
 #include "events.h"
+#include "helper.h"
+
 void move_left(GameModel *model) {
     unsigned int tempBitmap[8];
     int i;
@@ -89,6 +92,8 @@ void shoot(GameModel *model) {
 			break;
 		}
 	}
+	model->currentSoundEffect = sound_playershot;
+	model->currentSoundEffectDuration = 3;
 }
 
 /* Quit the game */
@@ -97,43 +102,48 @@ void quit_game(GameModel *model) {
     model->game_running = false;
 }
 
-/* Move enemy ships */
+/** 
+ * Function to move enemy ships towards the player.
+ */
 void move_enemies(GameModel *model) {
-    /* Iterate through each enemy and update their positions */
+    int i;
 
-	int i;
-	for(i = 0; i < ENTITY_COUNT; i++){
-		if(model->aliens[i].active == true){
+    /** Iterate through each alien. */
+    for(i = 0; i < ENTITY_COUNT; i++){
+        if(model->aliens[i].active == true){
+            /** Update x-axis movement */
+            /** If the alien is to the right of the player, move left */
+            if(model->aliens[i].x > model->player.x){
+                model->aliens[i].dx = -1;
+            } 
+            /** If the alien is to the left of the player, move right */
+            else if(model->aliens[i].x < model->player.x){
+                model->aliens[i].dx = 1;
+            } 
+            /** If the alien is aligned with the player on the x-axis, don't move horizontally */
+            else {
+                model->aliens[i].dx = 0;
+            }
 
-			/* check x-axis */
-			if(model->aliens[i].x > model->player.x){
-				model->aliens[i].dx = -1;				
-			}else{
-				model->aliens[i].dx = 1;
-			}
-
-			/* check y-axis */
-			if(model->aliens[i].y > model->player.y){
-				model->aliens[i].dy = -1;				
-			}else{
-				model->aliens[i].dy = 1;
-			}
-			model->aliens[i].x += model->aliens[i].dx;
-			model->aliens[i].y += model->aliens[i].dy;
-		}
-	}
-
+            /** Update y-axis movement */
+            /** If the alien is below the player, move up */
+            if(model->aliens[i].y > model->player.y){
+                model->aliens[i].dy = -1;
+            } 
+            /** If the alien is above the player, move down */
+            else if(model->aliens[i].y < model->player.y){
+                model->aliens[i].dy = 1;
+            } 
+            /** If the alien is aligned with the player on the y-axis, don't move vertically */
+            else {
+                model->aliens[i].dy = 0;
+            }
+        }
+    }
 }
 
-/* Move player's projectiles */
-void move_player_shot(GameModel *model) {
-    /* Iterate through player's shots and update their positions */
-}
 
-/* Move enemy's projectiles */
-void move_aliens_shot(GameModel *model) {
-    /* Iterate through alien shots and update their positions */
-}
+
 
 /* Generate a shot from an enemy */
 void generate_alien_shot(GameModel *model) {
@@ -172,15 +182,66 @@ void generate_alien(GameModel *model) {
 
 }
 
-/* Handle collision between player's shot and an alien ship */
+/** 
+ * Function to handle collision between player's shot and an alien ship.
+ */
 void player_shot_collides_with_alien(GameModel *model) {
-    /* Check for collisions and handle accordingly */
+    int i, j;
+
+    /** Iterate through each player shot. */
+    for (i = 0; i < SHOT_COUNT; i++) {
+        if (model->playerShots[i].active) {
+            /** Iterate through each alien. */
+            for (j = 0; j < ENTITY_COUNT; j++) {
+                if (model->aliens[j].active) {
+                    /** Check for collision. Assume aliens are rectangular with certain dimensions. */
+                    if (hit_detection(model->playerShots[i].x, model->playerShots[i].y, 
+                                            model->aliens[j].x, model->aliens[j].y, 
+                                            BITMAP_WIDTH, BITMAP_HEIGHT)) {
+                        /** Collision detected. */
+
+                        /** Deactivate the alien. */
+                        model->aliens[j].active = 0;
+
+                        /** Deactivate the player's shot. */
+                        model->playerShots[i].active = 0;
+
+                        /** Update player's score. */
+                        model->player.score += 1; 
+
+                        /** Play collision sound if not muted. */
+                        model->currentSoundEffect = sound_explosion;
+                        model->currentSoundEffectDuration = 2;
+
+                    }
+                }
+            }
+        }
+    }
 }
 
-/* Handle player's shot going out of the screen */
+
+/** 
+ * Function to handle player's shot going out of the screen.
+ */
 void player_shot_out_of_screen(GameModel *model) {
-    /* Check if any shots are out of the screen and handle them */
+    int i;
+
+    /** Iterate through each player's shot. */
+    for (i = 0; i < SHOT_COUNT; i++) {
+        if (model->playerShots[i].active) {
+            /** Check if the shot is out of the screen's bounds. */
+            if (model->playerShots[i].x >= SCREEN_WIDTH ||
+                model->playerShots[i].y >= SCREEN_HEIGHT ||
+                model->playerShots[i].x < 0 ||
+                model->playerShots[i].y < 0) {
+                /** Deactivate the shot if it is out of bounds. */
+                model->playerShots[i].active = false;
+            }
+        }
+    }
 }
+
 
 /* Handle collision between alien's shot and player's ship */
 void alien_shot_collides_with_player(GameModel *model) {
@@ -217,5 +278,6 @@ void player_collides_with_alien(GameModel *model) {
     /* Check for collisions and handle accordingly */
 }
 
-
-
+void toggle_mute(GameModel *model) {
+	model->isMuted = !model->isMuted;
+}

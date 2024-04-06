@@ -1,23 +1,29 @@
 #include "effects.h"
 #include "psg.h"
 
-/* Sound effect for player shooting */
 void sound_playershot() {
-    /* Set the tone for channel C to a specific frequency */
-    set_tone(2, 500);  /* Channel C, arbitrary tuning value for example */
+    /* Set an envelope for a quick attack and decay */
+    int envelopeShape = 0x09; /* Attack and Decay, no Sustain, no Repeat */
+    unsigned int envelopeSustain = 0; /* No sustain */
+    /* Set a medium-high pitch tone for the 'pew' sound */
+    set_tone(2, 800); /* Channel C, frequency for 'pew' sound */
 
-    /* Set the noise tuning to create a "hit" effect */
-    set_noise(15);  /* Arbitrary noise tuning value */
+    /* Enable tone and optionally noise on channel C */
+    enable_channel(2, 1, 0); /* Channel C, tone on, noise off or low */
 
-    /* Enable both tone and noise on channel C */
-    enable_channel(2, 1, 1); /* Channel C, tone on, noise on */
-
-    /* Set the volume to a suitable level */
-    set_volume(0, 10); /* Channel A, volume level (0 to 15) */
-
-    /* Optionally, set an envelope to modify the sound over time */
-    /* set_envelope(shape, sustain); */ /* Uncomment and modify as needed */
+    /* Set the volume for a quick but noticeable presence */
+    set_volume(2, 12); /* Channel C, moderately high volume */
+    set_envelope(envelopeShape, envelopeSustain);
 }
+
+void no_sound_effect() {
+    /* Disable both tone and noise for channel C */
+    enable_channel(2, 0, 0); /* Channel C, tone off, noise off */
+
+    /* Optionally, you can also set the volume of the channel to 0 */
+    set_volume(2, 0); /* Channel C, volume level to 0 */
+}
+
 
 /* Sound effect for explosion */
 void sound_explosion() {
@@ -41,6 +47,6 @@ void sound_spaceship_damage() {
 void sound_loss_of_life() {
     set_tone(0, 800);  /* Channel A, loss of life tone */
     enable_channel(0, 1, 0);  /* Channel A, tone on, noise off */
-    set_volume(0, 15);        /* Channel A, full volume for impact */
+    set_volume(0, 12);        /* Channel A, full volume for impact */
     /* set_envelope(shape, sustain); */ /* Optionally modify the envelope */
 }

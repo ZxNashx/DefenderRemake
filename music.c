@@ -7,7 +7,7 @@
 void play_note(int frequency) {
     set_tone(0, frequency);
     enable_channel(0, 1, 0);
-    set_volume(0, 15);
+    set_volume(0, 8);
 }
 
 /* Start playing music */

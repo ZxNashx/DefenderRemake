@@ -44,6 +44,13 @@ void handle_input(GameModel *model, unsigned int input) {
     else if (lowByte == 'q' || lowByte == 'Q') {
         quit_game(model);
     }
+    else if (lowByte == 'm' || lowByte == 'M') {
+        /* mute the game or unmute the game */
+        toggle_mute(model);
+    }
+    else if (lowByte == 'e' || lowByte == 'E') {
+        generate_alien(model);
+    }
     while(read_input() != 0){
         /* flush the input buffer */
     }

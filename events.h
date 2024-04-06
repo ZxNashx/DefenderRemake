@@ -71,23 +71,6 @@ Description:
 */
 void move_enemies(GameModel *model);
 
-/*
-Function: move_player_shot
-Arguments:
-    GameModel *model: Pointer to the game model.
-Description:
-    Updates the positions of the player's projectiles.
-*/
-void move_player_shot(GameModel *model);
-
-/*
-Function: move_aliens_shot
-Arguments:
-    GameModel *model: Pointer to the game model.
-Description:
-    Updates the positions of the alien's projectiles.
-*/
-void move_aliens_shot(GameModel *model);
 
 /*
 Function: generate_alien_shot
@@ -162,5 +145,5 @@ Description:
 void player_collides_with_alien(GameModel *model);
 
 void freeze_player(GameModel *model);
-
+void toggle_mute(GameModel *model);
 #endif /* EVENTS_H */
