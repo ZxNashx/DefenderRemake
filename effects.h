@@ -10,8 +10,7 @@ void sound_explosion();
 /* Declaration for the function to play the spaceship damage sound */
 void sound_spaceship_damage();
 
-/* Declaration for the function to play the loss of life sound */
-void sound_loss_of_life();
+void sound_game_over();
 
 /* Include any other sound-related function declarations here */
 

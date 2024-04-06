@@ -71,6 +71,7 @@ Description:
 */
 void move_enemies(GameModel *model);
 
+void spaceship_damaged(GameModel *model);
 
 /*
 Function: generate_alien_shot

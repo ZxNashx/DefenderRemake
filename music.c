@@ -3,25 +3,45 @@
 #include "psg.h"
 #include "helper.h"
 
-/* Play a note */
-void play_note(int frequency) {
-    set_tone(0, frequency);
-    enable_channel(0, 1, 0);
-    set_volume(0, 8);
+/* Song data */
+Note song_A[] = {
+    {C, 25, 10}, {Cs, 25, 10}, {G4, 25, 10}, {G4, 25, 10},
+    {A4, 25, 10}, {A4, 25, 10}, {G4, 50, 10}, {F4, 25, 10},
+    {F4, 25, 10}, {E4, 25, 10}, {E4, 25, 10}, {D4, 25, 10},
+    {D4, 25, 10}, {C4, 50, 10}
+};
+
+/* Song data */
+Note song_B[] = {
+    {C4, 25, 10}, {C4, 25, 10}, {G4, 25, 10}, {G4, 25, 10},
+    {A4, 25, 10}, {A4, 25, 10}, {G4, 50, 10}, {F4, 25, 10},
+    {F4, 25, 10}, {E4, 25, 10}, {E4, 25, 10}, {D4, 25, 10},
+    {D4, 25, 10}, {C4, 50, 10}
+};
+
+
+
+
+/* Play a note on a specific channel */
+void play_note(int channel, Note note) {
+    set_tone(channel, note.frequency);
+    enable_channel(channel, 1, 0);
+    set_volume(channel, note.volume);
 }
 
-/* Start playing music */
-void start_music(int *currentNote, uint32_t *lastNoteTime, Note *song, int numNotes) {
+/* Start playing a song on a specific channel */
+void start_music(int channel, Note *song, int *currentNote, uint32_t *lastNoteTime) {
     *currentNote = 0;
     *lastNoteTime = get_time();
-    play_note(song[*currentNote].frequency);
+    play_note(channel, song[*currentNote]);
 }
+/* Update a song on a specific channel */
+void update_music(int channel, Note *song, int *currentNote, uint32_t *lastNoteTime, uint32_t currentTime, int numNotes) {
+    uint32_t elapsedTime = currentTime - *lastNoteTime;
 
-/* Update the music */
-void update_music(int *currentNote, uint32_t *lastNoteTime, uint32_t currentTime, Note *song, int numNotes) {
-    if (currentTime - *lastNoteTime >= song[*currentNote].duration) {
+    if (elapsedTime >= song[*currentNote].duration) {
         *currentNote = (*currentNote + 1) % numNotes;
         *lastNoteTime = currentTime;
-        play_note(song[*currentNote].frequency);
+        play_note(channel, song[*currentNote]);
     }
 }

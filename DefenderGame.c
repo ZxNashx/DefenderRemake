@@ -18,13 +18,6 @@ char *backBuffer;
 char *frontBuffer;
 char *orig_buffer;
 
-void wait_for_vertical_blank(uint32_t last_vblank) {
-    uint32_t current_time;
-    do {
-        current_time = get_time();
-    } while (current_time == last_vblank);
-}
-
 void swapBuffers(char **frontBuffer, char **backBuffer) {
     char *temp = *frontBuffer;
     *frontBuffer = *backBuffer;
@@ -37,19 +30,15 @@ int main() {
 
     /* Declaration of variables */
     uint32_t timeThen, timeNow, timeElapsed, lastMusicUpdate;
-    int currentNote = 0;       
-    uint32_t lastNoteTime = 0;
-    int numNotes;
+    int currentNoteA = 0, currentNoteB = 0;
+    uint32_t lastNoteTimeA = 0, lastNoteTimeB = 0;
+    int numNotesA = NUM_NOTES_IN_SONG_A;
+    int numNotesB = NUM_NOTES_IN_SONG_B;
+    int elapsedA;
+    int elapsedB;
     unsigned short soundEffectPlayTime = 0;
     int i;
 
-    /* Song data */
-    Note song[] = {
-        {C4, 25}, {C4, 25}, {G4, 25}, {G4, 25}, {A4, 25}, {A4, 25}, {G4, 50},
-        {F4, 25}, {F4, 25}, {E4, 25}, {E4, 25}, {D4, 25}, {D4, 25}, {C4, 50},
-
-    };
-    numNotes = sizeof(song) / sizeof(song[0]);
 
 
     /* Buffer alignment */
@@ -65,7 +54,8 @@ int main() {
     /* Game initialization */
     initModel(&model);
 
-    start_music(&currentNote, &lastNoteTime, song, numNotes);
+    start_music(0, song_A, &currentNoteA, &lastNoteTimeA);
+    start_music(1, song_B, &currentNoteB, &lastNoteTimeB);
     lastMusicUpdate = get_time(); 
 
 
@@ -73,6 +63,7 @@ int main() {
 
     /* Game loop initialization */
     timeThen = get_time(); 
+    stop_sound();
 
     /* Main game loop */
     do{
@@ -114,9 +105,10 @@ int main() {
 
         }
 
-        /* Music update */
         if (timeNow - lastMusicUpdate >= MUSIC_UPDATE_INTERVAL && !model.isMuted) {
-            update_music(&currentNote, &lastNoteTime, timeNow, song, numNotes); 
+            update_music(0, song_A, &currentNoteA, &lastNoteTimeA, timeNow, numNotesA); 
+            update_music(1, song_B, &currentNoteB, &lastNoteTimeB, timeNow, numNotesB); 
+
             lastMusicUpdate = timeNow;
         }
     }while (model.game_running == true);

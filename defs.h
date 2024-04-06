@@ -32,6 +32,8 @@ typedef unsigned long uint32_t;
 #define SCAN_CODE_SPACE       0x39
 #define MUSIC_UPDATE_INTERVAL 14
 
+#define longs_buffer (SCREEN_WIDTH >> 5) * SCREEN_HEIGHT
+
 /* Define PSG register base addresses */
 #define PSG_REG_SELECT  0xff8800
 #define PSG_REG_WRITE   0xff8802

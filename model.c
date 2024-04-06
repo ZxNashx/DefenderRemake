@@ -9,7 +9,8 @@ void initModel(GameModel *model) {
     model->player.y = 200; 
     
     model->player.dy = 0;
-    model->player.lives = 3; 
+    model->player.max_lives = 3;
+    model->player.lives = model->player.max_lives; 
     model->player.score = 0;
     model->game_running = true;
     model->isMuted = true;
@@ -17,7 +18,6 @@ void initModel(GameModel *model) {
     /* default x direction*/
     model->player.speed = 4;
     model->player.dx = model->player.speed;
-
 
     /* initialize all the arrays in the game model */
 
@@ -70,6 +70,10 @@ void updateModel(GameModel *model) {
     move_enemies(model);
     player_shot_out_of_screen(model);
     player_shot_collides_with_alien(model);
+    generate_alien_shot(model);
+    alien_shot_collides_with_player(model);
+    player_collides_with_alien(model);
+
 }
 
 void movePlayer(Player *player){

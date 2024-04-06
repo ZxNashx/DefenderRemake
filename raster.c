@@ -24,11 +24,9 @@ void plot_pixel(char *base, int x, int y, int black) {
 
 /* magic */
 void clear_black(char *base) {
-    unsigned long black = 0xFFFFFFFF;
-    unsigned int totalLongs = (SCREEN_WIDTH >> 5) * SCREEN_HEIGHT;
     unsigned int i;
-    for (i = 0; i < totalLongs; i++) {
-        ((unsigned long*)base)[i] = black;
+    for (i = 0; i < longs_buffer; i++) {
+        ((unsigned long*)base)[i] = 0xFFFFFFFF;
     }
 }
 
@@ -131,4 +129,8 @@ void plot_rectangle(char *base, int x1, int y1, int x2, int y2) {
     /* Draw the vertical sides of the rectangle */
     draw_vline(base, y1,y2, x1);
     draw_vline(base, y1,y2, x2);
+}
+
+uint16_t *get_video_base(){
+
 }

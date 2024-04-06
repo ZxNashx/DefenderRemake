@@ -11,6 +11,28 @@ const unsigned int spaceship_bitmap[8] = {
     0xFFFF
 };
 
+const unsigned int spaceship_bitmap_alive[8] = {
+    0xFF00,
+    0xFF00,
+    0xFF00,
+    0xFF00,
+    0xFFFF,
+    0xFFFF,
+    0xFFFF,
+    0xFFFF
+};
+
+const unsigned int spaceship_bitmap_dead[8] = {
+    0x0F00,
+    0xF000,
+    0x0F00,
+    0xF000,
+    0x0FF0,
+    0xF0F0,
+    0x0F0F,
+    0xF0F0
+};
+
 const unsigned int alien_bitmap[8] = {
     0xFFFF,
     0xF00F,

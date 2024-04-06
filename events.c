@@ -8,6 +8,7 @@
 #include "effects.h"
 #include "events.h"
 #include "helper.h"
+#include "psg.h"
 
 void move_left(GameModel *model) {
     unsigned int tempBitmap[8];
@@ -142,13 +143,56 @@ void move_enemies(GameModel *model) {
     }
 }
 
+void spaceship_damaged(GameModel *model){
+    model->currentSoundEffect = sound_spaceship_damage;
+    model->currentSoundEffectDuration = 3;
+    model->player.lives -= 1;  /* Player loses a life */
+    /* Deactivate all other shots */
+    deactivate_all_shots(model);
 
-
-
-/* Generate a shot from an enemy */
-void generate_alien_shot(GameModel *model) {
-    /* Code to generate a new shot from an alien */
 }
+
+void generate_alien_shot(GameModel *model) {
+    int chance = rand() % 10; /* Generate a random number between 0 and 9 */
+    int i, alienIndex;
+    int foundActiveAlien = false;
+    int deltaX;
+    if (chance == 0) { /* 1 in 10 chance */
+        /* Find an active alien randomly */
+        for (i = 0; i < ENTITY_COUNT; i++) {
+            alienIndex = rand() % ENTITY_COUNT;
+            if (model->aliens[alienIndex].active) {
+                foundActiveAlien = true;
+                break;
+            }
+        }
+
+        /* Only proceed if an active alien is found */
+        if (foundActiveAlien) {
+            /* Find an inactive alien shot */
+            for (i = 0; i < SHOT_COUNT; i++) {
+                if (model->alienShots[i].active == false) {
+
+                    /* Set the shot active */
+                    model->alienShots[i].active = true;
+
+                    /* Position the shot at the chosen alien's location */
+                    model->alienShots[i].x = model->aliens[alienIndex].x;
+                    model->alienShots[i].y = model->aliens[alienIndex].y;
+
+                    /* Calculate the direction of the shot towards the player */
+                    deltaX = model->player.x - model->aliens[alienIndex].x;
+
+                    /* Assign a velocity to the shot in the direction of the player */
+                    model->alienShots[i].dx = deltaX < 0 ? -2 : 2;
+
+                    break;
+                }
+            }
+        }
+    }
+}
+
 
 /* Generate a new enemy ship */
 void generate_alien(GameModel *model) {
@@ -213,6 +257,9 @@ void player_shot_collides_with_alien(GameModel *model) {
                         model->currentSoundEffect = sound_explosion;
                         model->currentSoundEffectDuration = 2;
 
+                        /* spawn new alien */
+                        generate_alien(model);
+
                     }
                 }
             }
@@ -245,7 +292,22 @@ void player_shot_out_of_screen(GameModel *model) {
 
 /* Handle collision between alien's shot and player's ship */
 void alien_shot_collides_with_player(GameModel *model) {
-    /* Check for collisions and handle accordingly */
+    int i;
+
+    for (i = 0; i < SHOT_COUNT; i++) {
+        if (model->alienShots[i].active) {
+            /* Assuming AlienShot and Player have width and height */
+            if (hit_detection(model->alienShots[i].x, model->alienShots[i].y, 
+                              model->player.x, model->player.y, 
+                              BITMAP_WIDTH, BITMAP_HEIGHT)) {
+                /* Collision detected, handle it */
+                model->alienShots[i].active = false;  /* Deactivate this alien shot */
+                spaceship_damaged(model);
+
+                break;  /* Collision handled, no need to check further */
+            }
+        }
+    }
 }
 
 /* Handle alien's shot going out of the screen */
@@ -275,9 +337,26 @@ int player_runs_out_of_lives(GameModel *model) {
 
 /* Handle collision between player's ship and an alien ship */
 void player_collides_with_alien(GameModel *model) {
-    /* Check for collisions and handle accordingly */
+    int i;
+
+    for (i = 0; i < ENTITY_COUNT; i++) {
+        if (model->aliens[i].active) {
+            /* Assuming Alien has width and height same as player's ship */
+            if (hit_detection(model->player.x, model->player.y, 
+                              model->aliens[i].x, model->aliens[i].y, 
+                              BITMAP_WIDTH, BITMAP_HEIGHT)) {
+                /* Collision detected */
+                model->aliens[i].active = false;  /* Deactivate the collided alien */
+                spaceship_damaged(model);
+                break;  /* Collision handled, no need to check further */
+            }
+        }
+    }
 }
 
 void toggle_mute(GameModel *model) {
 	model->isMuted = !model->isMuted;
+    if(model->isMuted){
+        stop_sound();
+    }
 }

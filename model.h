@@ -18,7 +18,7 @@ Fields:
 */
 typedef struct {
     int x, y;  
-    unsigned int lives; 
+    int lives; 
     unsigned int score; 
     int dx; /* x velocity,
     used for speed of aliens
@@ -26,7 +26,7 @@ typedef struct {
      */
     int dy; /* y velocity */
     unsigned int speed;
-    int empty;
+    int max_lives;
 } Player;
 
 /*

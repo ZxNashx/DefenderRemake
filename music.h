@@ -3,6 +3,18 @@
 
 #include "defs.h"
 
+/* number of notes in each song */
+#define NUM_NOTES_IN_SONG_A 14
+#define NUM_NOTES_IN_SONG_B 14
+
+/* Define the structure for musical notes */
+typedef struct {
+    int frequency; /* Frequency of the note */
+    int duration;  /* Duration of the note in milliseconds */
+    int volume;    /* Volume of the note */
+    int empty;
+} Note;
+
 /* Define note frequencies (simplified) */
 #define C4 261
 #define D4 294
@@ -13,21 +25,33 @@
 #define B4 493
 #define C5 523
 
+/* Define musical note frequencies */
+#define C     478
+#define Cs    451
+#define D     426
+#define Ds    402
+#define E     379
+#define F     358
+#define Fs    338
+#define G     319
+#define Gs    301
+#define A     284
+#define As    268
+#define B     253
 
-/* Define the structure for musical notes */
-typedef struct {
-    int frequency;     /* Frequency of the note */
-    int duration;      /* Duration of the note in milliseconds */
-} Note;
 
-/* Function to start playing music */
-void start_music(int *currentNote, uint32_t *lastNoteTime, Note *song, int numNotes);
+extern Note song_A[];
+extern Note song_B[];
 
-/* Function to play a specific note */
-void play_note(int frequency);
+/*
+q = quit, m = mute
+run.g in atari ST to run
+f12 to run fast
+*/
 
-/* Function to update the music based on the current time */
-void update_music(int *currentNote, uint32_t *lastNoteTime, uint32_t currentTime, Note *song, int numNotes);
 
+void play_note(int channel, Note note);
+void start_music(int channel, Note *song, int *currentNote, uint32_t *lastNoteTime);
+void update_music(int channel, Note *song, int *currentNote, uint32_t *lastNoteTime, uint32_t currentTime, int numNotes);
 
 #endif /* MUSIC_H */

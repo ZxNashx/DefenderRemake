@@ -1,6 +1,6 @@
 #ifndef RASTER_H
 #define RASTER_H
-
+#include "defs.h"
 
 /*
 Function: plot_pixel
@@ -89,5 +89,9 @@ Description:
     Plots a rectangle with corners at the specified coordinates.
 */
 void plot_rectangle(char *base, int x1, int y1, int x2, int y2);
+
+
+extern void set_video_base(uint16_t *);
+extern uint16_t *get_video_base();
 
 #endif /* RASTER_H */

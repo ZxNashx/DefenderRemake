@@ -16,9 +16,19 @@ void clear_region(char *base, int x, int y, int width, int height) {
 }
 
 void renderPlayer(Player *player, char *base) {
+    int i;
     plot_bitmap(base, spaceship_bitmap, player->x, player->y, BITMAP_WIDTH, BITMAP_HEIGHT);
-}
 
+    /* Iterate over the number of lives */
+    for(i = 0; i < player->max_lives; i++) {
+        /* Check if current life should be rendered as alive or dead */
+        if (i < player->lives) {
+            plot_bitmap(base, spaceship_bitmap_alive, 40 + i * (BITMAP_WIDTH + 5), 350, BITMAP_WIDTH, BITMAP_HEIGHT);
+        } else {
+            plot_bitmap(base, spaceship_bitmap_dead, 40 + i * (BITMAP_WIDTH + 5), 350, BITMAP_WIDTH, BITMAP_HEIGHT);
+        }
+    }
+}
 void renderAlien(Alien *alien, char *base) {
     plot_bitmap(base, alien_bitmap, alien->x, alien->y, BITMAP_WIDTH, BITMAP_HEIGHT);
 }

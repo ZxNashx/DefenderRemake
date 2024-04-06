@@ -39,12 +39,12 @@ void sound_spaceship_damage() {
     set_tone(2, 400);  /* Channel C, damage tone */
     set_noise(20);     /* Noise for damage effect */
     enable_channel(2, 1, 1);  /* Channel C, tone and noise on */
-    set_volume(2, 8);         /* Channel C, medium volume for damage */
+    set_volume(2, 15);         /* Channel C, medium volume for damage */
     /* set_envelope(shape, sustain); */ /* Optionally modify the envelope */
 }
 
 /* Sound effect for loss of life */
-void sound_loss_of_life() {
+void sound_game_over() {
     set_tone(0, 800);  /* Channel A, loss of life tone */
     enable_channel(0, 1, 0);  /* Channel A, tone on, noise off */
     set_volume(0, 12);        /* Channel A, full volume for impact */
