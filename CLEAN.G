@@ -1,2 +1,2 @@
-Rm *.o
+Rm *.o *.tos *.l *.i
 make
