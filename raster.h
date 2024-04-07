@@ -90,8 +90,8 @@ Description:
 */
 void plot_rectangle(char *base, int x1, int y1, int x2, int y2);
 
-
-extern void set_video_base(uint16_t *);
-extern uint16_t *get_video_base();
+char * get_video_base();
+extern void set_video_base_asm(unsigned int);
+void set_video_base(char *base);
 
 #endif /* RASTER_H */

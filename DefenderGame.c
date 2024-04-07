@@ -28,6 +28,12 @@ void swapBuffers(char **frontBuffer, char **backBuffer) {
 int main() {
     GameModel model;
 
+
+    /*
+    extern void set_video_base(uint16_t *);
+    extern uint16_t *get_video_base();
+    */
+
     /* Declaration of variables */
     uint32_t timeThen, timeNow, timeElapsed, lastMusicUpdate;
     int currentNoteA = 0, currentNoteB = 0;
@@ -47,9 +53,9 @@ int main() {
         backBuffer++;
     }
 
-    orig_buffer = Physbase();
-    frontBuffer = Physbase(); 
-    Setscreen(-1, backBuffer, -1);
+    orig_buffer = get_video_base();
+    frontBuffer = get_video_base(); 
+    set_video_base(backBuffer);
 
     /* Game initialization */
     initModel(&model);
@@ -98,7 +104,7 @@ int main() {
 
             clear_black(backBuffer);
             render(&model, backBuffer);
-            Setscreen(-1, backBuffer, -1);
+            set_video_base(backBuffer);
             swapBuffers(&frontBuffer, &backBuffer);
             timeThen = timeNow;
             Vsync();
@@ -108,13 +114,12 @@ int main() {
         if (timeNow - lastMusicUpdate >= MUSIC_UPDATE_INTERVAL && !model.isMuted) {
             update_music(0, song_A, &currentNoteA, &lastNoteTimeA, timeNow, numNotesA); 
             update_music(1, song_B, &currentNoteB, &lastNoteTimeB, timeNow, numNotesB); 
-
             lastMusicUpdate = timeNow;
         }
     }while (model.game_running == true);
 
     /* Cleanup and exit */
     stop_sound();
-    Setscreen(-1, orig_buffer, -1);
+    set_video_base(orig_buffer);
     return 0;
 }

@@ -43,6 +43,9 @@ all: defend~1.tos #graphi~1.tos modelt~1.tos render~1.tos soundd~1.tos
 #$(SOUNDDRIVER_OBJ): $(SOUNDDRIVER_SRC) psg.h music.h effects.h helper.h
 #	$(CC) $(CFLAGS) -c $(SOUNDDRIVER_SRC)
 
+video.o: video.s
+	gen -D -L2 video.s
+
 input.o: input.c input.h 
 	$(CC) $(CFLAGS) -c input.c
 
@@ -76,8 +79,8 @@ events.o: events.c events.h
 
 
 # Compile defender game
-defend~1.tos: $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o music.o helper.o effects.o 
-	$(CC) $(CFLAGS) $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o psg.o input.o music.o helper.o effects.o events.o -o defend~1.tos
+defend~1.tos: $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o music.o helper.o effects.o video.o
+	$(CC) $(CFLAGS) $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o psg.o input.o music.o helper.o effects.o events.o video.o -o defend~1.tos
 
 $(DEFENDERGAME_OBJ): $(DEFENDERGAME_SRC) bitmap.h raster.h renderer.h model.h defs.h psg.h music.h helper.h events.h input.h
 	$(CC) $(CFLAGS) -c $(DEFENDERGAME_SRC)

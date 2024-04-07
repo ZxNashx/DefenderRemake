@@ -8,6 +8,26 @@
 #include <linea.h>
 #include <osbind.h>
 
+char *get_video_base() {
+    long old_ssp = Super(0);
+    volatile unsigned char *frame_hi = (unsigned char *)0xFFFF8201;
+    volatile unsigned char *frame_mi = (unsigned char *)0xFFFF8203;
+
+    unsigned long frame_buffer = ((unsigned long)(*frame_hi) << 16) | ((unsigned long)(*frame_mi) << 8);
+
+    Super(old_ssp);
+    return (char *)frame_buffer;
+}
+
+void set_video_base(char *frameBuffer){
+    long old_ssp = Super(0);
+    long videoAddress = (long) frameBuffer;
+    unsigned int inputToSetScreen = videoAddress >> 8;
+    set_video_base_asm(inputToSetScreen);
+    Super(old_ssp);
+}
+
+
 void plot_pixel(char *base, int x, int y, int black) {
     if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT) {
         char *pixel_byte = base + y * 80 + (x >> 3);
@@ -131,6 +151,3 @@ void plot_rectangle(char *base, int x1, int y1, int x2, int y2) {
     draw_vline(base, y1,y2, x2);
 }
 
-uint16_t *get_video_base(){
-
-}
