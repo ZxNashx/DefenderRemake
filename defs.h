@@ -38,8 +38,11 @@ typedef unsigned long uint32_t;
 #define PSG_REG_SELECT  0xff8800
 #define PSG_REG_WRITE   0xff8802
 
+#define FONT_WIDTH  8   
+#define FONT_HEIGHT 8  
 #define BITS_IN_BYTE 8
 
+#define MAP_SIZE 500
 
 
 #endif

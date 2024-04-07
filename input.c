@@ -29,6 +29,8 @@ int main_menu_input(unsigned int input){
     }
     else if (lowByte == 'q' || lowByte == 'Q') {
         return 3;
+    }else{
+        return 0; /* default input */
     }
     flush_input();
 }

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <osbind.h>
 #include "model.h"
 #include "renderer.h"
@@ -11,6 +12,7 @@
 #include "helper.h"
 #include "psg.h"
 #include "effects.h"
+#include "text.h"
 
 #include "splash.h"
 
@@ -26,11 +28,6 @@ void swapBuffers(char **frontBuffer, char **backBuffer) {
     *backBuffer = temp;
 }
 
-int main(){
-    run_game();
-    return 0;
-}
-
 int run_game() {
 
     GameModel model;
@@ -44,11 +41,8 @@ int run_game() {
     int elapsedA;
     int elapsedB;
     unsigned short soundEffectPlayTime = 0;
+    unsigned short startingEnemyCount = 3;
     int i;
-
-    int splash_screen_result;
-
-    splash_screen_result = create_splash_screen();
 
     /* Buffer alignment */
     backBuffer = rawBackBuffer;
@@ -56,7 +50,6 @@ int run_game() {
         backBuffer++;
     }
 
-    orig_buffer = get_video_base();
     frontBuffer = get_video_base(); 
     set_video_base(backBuffer);
 
@@ -74,15 +67,9 @@ int run_game() {
     timeThen = get_time(); 
     stop_sound();
 
-    /* check splashscreen result*/
-    if(splash_screen_result == 1){
-        /* singleplayer, create an enemy to fight */
+
+    for(i = 0; i < startingEnemyCount; i++){
         generate_alien(&model);
-    }else if(splash_screen_result == 2){
-        /* coop */
-    }else{
-        /* exit */
-        model.game_running = false;
     }
 
     /* Main game loop */
@@ -103,8 +90,11 @@ int run_game() {
             updateModel(&model);
 
             if(model.player.lives <= 0){
-                /* game over */
-                run_game();
+                model.game_running = false;
+                /**/
+                model.currentSoundEffect = sound_game_over;
+                model.currentSoundEffectDuration = 10;
+
             }
 
             /* sound play update */
@@ -123,6 +113,9 @@ int run_game() {
 
             clear_black(backBuffer);
             render(&model, backBuffer);
+
+            plot_number(backBuffer, model.player.map_x_position, 10, 10, 1);
+
             set_video_base(backBuffer);
             swapBuffers(&frontBuffer, &backBuffer);
             timeThen = timeNow;
@@ -135,11 +128,44 @@ int run_game() {
             update_music(1, song_B, &currentNoteB, &lastNoteTimeB, timeNow, numNotesB); 
             lastMusicUpdate = timeNow;
         }
-    }while (model.game_running == true);
+    }while (model.game_running == true || !(model.currentSoundEffect = no_sound_effect));
 
     /* Cleanup and exit */
     stop_sound();
+
+    return model.player.score;
+}
+
+int main(){
+    int running = true;
+    int splash_screen_result;
+    int game_score = 0;
+    int high_score = 0;
+    orig_buffer = get_video_base();
+    srand(get_time());
+
+    while(running){
+
+        /* set the new highscore */
+        if(game_score > high_score){
+            high_score = game_score;
+        }
+        splash_screen_result = create_splash_screen(game_score, high_score);
+        /* check splashscreen result*/
+        if(splash_screen_result == 1){
+            /* singleplayer */
+            running = true;
+            game_score = run_game();
+        }else if(splash_screen_result == 2){
+            /* coop */
+            running = true;
+            game_score = run_game();
+        }else{
+            /* exit */
+            running = false;
+        }
+    }
+
     set_video_base(orig_buffer);
     return 0;
 }
-

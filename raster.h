@@ -93,5 +93,6 @@ void plot_rectangle(char *base, int x1, int y1, int x2, int y2);
 char * get_video_base();
 extern void set_video_base_asm(unsigned int);
 void set_video_base(char *base);
+void fill_rect(char *base, int x, int y, int width, int height, int black);
 
 #endif /* RASTER_H */

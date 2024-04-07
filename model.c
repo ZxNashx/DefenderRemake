@@ -15,6 +15,7 @@ void initModel(GameModel *model) {
     model->game_running = true;
     model->isMuted = true;
     model->time_alive = 0;
+    model->player.map_x_position = 0;
 
     /* default x direction*/
     model->player.speed = 4;
@@ -77,12 +78,14 @@ void updateModel(GameModel *model) {
     generate_alien_shot(model);
     alien_shot_collides_with_player(model);
     player_collides_with_alien(model);
+    keep_player_in_bounds(model);
 
 }
 
 void movePlayer(GameModel *model) {
     /* Player will only move vertically */
     model->player.y += model->player.dy;
+    model->player.map_x_position += model->player.dx;
 }
 
 void moveAlien(GameModel *model, int alienIndex) {

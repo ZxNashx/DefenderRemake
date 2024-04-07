@@ -25,7 +25,6 @@ void set_video_base(char *frameBuffer){
     Super(old_ssp);
 }
 
-
 void plot_pixel(char *base, int x, int y, int black) {
     if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT) {
         char *pixel_byte = base + y * 80 + (x >> 3);
@@ -35,6 +34,15 @@ void plot_pixel(char *base, int x, int y, int black) {
             *pixel_byte |= pixel_bit;
         } else {
             *pixel_byte &= ~pixel_bit;
+        }
+    }
+}
+
+void fill_rect(char *base, int x, int y, int width, int height, int black) {
+    int row,col;
+    for (row = y; row < y + height; row++) {
+        for (col = x; col < x + width; col++) {
+            plot_pixel(base, col, row, black);
         }
     }
 }

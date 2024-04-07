@@ -21,12 +21,13 @@ typedef struct {
     int lives; 
     unsigned int score; 
     int dx; /* x velocity,
-    used for speed of aliens
-
-     */
+    used for speed of aliens*/
+    
     int dy; /* y velocity */
     unsigned int speed;
     int max_lives;
+    int map_x_position;
+    int empty;
 } Player;
 
 /*

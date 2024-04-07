@@ -5,7 +5,7 @@
 int input_available();
 
 unsigned int read_input();
-
+int main_menu_input(unsigned int input);
 /*
 Function: handle_input
 Arguments:
