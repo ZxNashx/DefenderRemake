@@ -78,7 +78,6 @@ void move_up(GameModel *model) {
 }
 
 
-
 /* Player shoots a projectile */
 void shoot(GameModel *model) {
     /* Code to create and launch a bullet from the player's current position */
@@ -87,8 +86,13 @@ void shoot(GameModel *model) {
 		if(model->playerShots[i].active == false){
 			/* unused playershot was found */
 			model->playerShots[i].active = true;
-			model->playerShots[i].x = model->player.x;
-			model->playerShots[i].y = model->player.y;
+            /* slight adjustment so it looks good */
+            if(model->player.dx < 0){
+                model->playerShots[i].x = model->player.x + 16;
+            }else{
+                model->playerShots[i].x = model->player.x;
+            }
+			model->playerShots[i].y = model->player.y + 6;
 			model->playerShots[i].dx = model->player.dx;
 			break;
 		}

@@ -12,6 +12,8 @@
 #include "psg.h"
 #include "effects.h"
 
+#include "splash.h"
+
 /* buffer size is 32k */
 char rawBackBuffer[BUFFER_SIZE + 256];
 char *backBuffer;
@@ -24,15 +26,14 @@ void swapBuffers(char **frontBuffer, char **backBuffer) {
     *backBuffer = temp;
 }
 
+int main(){
+    run_game();
+    return 0;
+}
 
-int main() {
+int run_game() {
+
     GameModel model;
-
-
-    /*
-    extern void set_video_base(uint16_t *);
-    extern uint16_t *get_video_base();
-    */
 
     /* Declaration of variables */
     uint32_t timeThen, timeNow, timeElapsed, lastMusicUpdate;
@@ -45,7 +46,9 @@ int main() {
     unsigned short soundEffectPlayTime = 0;
     int i;
 
+    int splash_screen_result;
 
+    splash_screen_result = create_splash_screen();
 
     /* Buffer alignment */
     backBuffer = rawBackBuffer;
@@ -71,6 +74,17 @@ int main() {
     timeThen = get_time(); 
     stop_sound();
 
+    /* check splashscreen result*/
+    if(splash_screen_result == 1){
+        /* singleplayer, create an enemy to fight */
+        generate_alien(&model);
+    }else if(splash_screen_result == 2){
+        /* coop */
+    }else{
+        /* exit */
+        model.game_running = false;
+    }
+
     /* Main game loop */
     do{
         timeNow = get_time();
@@ -87,6 +101,11 @@ int main() {
         /* Game logic and rendering */
         if (timeElapsed >= 1) {
             updateModel(&model);
+
+            if(model.player.lives <= 0){
+                /* game over */
+                run_game();
+            }
 
             /* sound play update */
             if(model.currentSoundEffect != no_sound_effect && 
@@ -123,3 +142,4 @@ int main() {
     set_video_base(orig_buffer);
     return 0;
 }
+

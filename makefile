@@ -77,12 +77,19 @@ music.o: music.c music.h
 events.o: events.c events.h
 	$(CC) $(CFLAGS) -c events.c
 
+splash.o: splash.c splash.h
+	$(CC) $(CFLAGS) -c splash.c
 
+font.o: font.c font.h
+	$(CC) $(CFLAGS) -c font.c
+
+text.o: text.c text.h
+	$(CC) $(CFLAGS) -c text.c
 # Compile defender game
-defend~1.tos: $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o music.o helper.o effects.o video.o
-	$(CC) $(CFLAGS) $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o psg.o input.o music.o helper.o effects.o events.o video.o -o defend~1.tos
+defend~1.tos: $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o music.o helper.o effects.o video.o splash.o text.o font.o
+	$(CC) $(CFLAGS) $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o psg.o input.o music.o helper.o effects.o events.o video.o splash.o text.o font.o -o defend~1.tos
 
-$(DEFENDERGAME_OBJ): $(DEFENDERGAME_SRC) bitmap.h raster.h renderer.h model.h defs.h psg.h music.h helper.h events.h input.h
+$(DEFENDERGAME_OBJ): $(DEFENDERGAME_SRC) bitmap.h raster.h renderer.h model.h defs.h psg.h music.h helper.h events.h input.h splash.h text.h font.h
 	$(CC) $(CFLAGS) -c $(DEFENDERGAME_SRC)
 
 # Clean target to remove built files

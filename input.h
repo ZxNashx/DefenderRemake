@@ -16,6 +16,6 @@ Description:
 */
 void handle_input(GameModel *model, unsigned int input);
 
-
+void flush_input();
 
 #endif 

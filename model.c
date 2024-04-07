@@ -14,6 +14,7 @@ void initModel(GameModel *model) {
     model->player.score = 0;
     model->game_running = true;
     model->isMuted = true;
+    model->time_alive = 0;
 
     /* default x direction*/
     model->player.speed = 4;
@@ -45,27 +46,30 @@ void initModel(GameModel *model) {
 void updateModel(GameModel *model) {
     int i;
 
+    model->time_alive++;
+    if (model->time_alive % 700 == 0) {
+        generate_alien(model);
+    }
 
-    movePlayer(&model->player);
+    movePlayer(model);
 
     for (i = 0; i < ENTITY_COUNT; i++) {
         if (model->aliens[i].active) {
-            moveAlien(&model->aliens[i]);
+            moveAlien(model, i);
         }
     }
 
     for (i = 0; i < SHOT_COUNT; i++) {
         if (model->alienShots[i].active) {
-            moveAlienShot(&model->alienShots[i]);
+            moveAlienShot(model, i);
         }
     }
 
     for (i = 0; i < SHOT_COUNT; i++) {
         if (model->playerShots[i].active) {
-            movePlayerShot(&model->playerShots[i]);
+            movePlayerShot(model, i);
         }
     }
-
     /* updates */
     move_enemies(model);
     player_shot_out_of_screen(model);
@@ -76,20 +80,23 @@ void updateModel(GameModel *model) {
 
 }
 
-void movePlayer(Player *player){
-    /* player will only move vertically */
-    player->y += player->dy;
+void movePlayer(GameModel *model) {
+    /* Player will only move vertically */
+    model->player.y += model->player.dy;
 }
 
-void moveAlien(Alien *alien) {
-    alien->x += alien->dx;
+void moveAlien(GameModel *model, int alienIndex) {
+    Alien *alien = &model->aliens[alienIndex];
+    alien->x += alien->dx - (model->player.dx);
     alien->y += alien->dy;
 }
 
-void moveAlienShot(AlienShot *as) {
-    as->x += as->dx;
+void moveAlienShot(GameModel *model, int shotIndex) {
+    AlienShot *as = &model->alienShots[shotIndex];
+    as->x += as->dx  - (model->player.dx);
 }
 
-void movePlayerShot(PlayerShot *ps) {
-    ps->x += ps->dx;
+void movePlayerShot(GameModel *model, int shotIndex) {
+    PlayerShot *ps = &model->playerShots[shotIndex];
+    ps->x += 2*ps->dx  + (model->player.dx);
 }

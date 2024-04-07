@@ -103,6 +103,8 @@ typedef struct {
     void (*currentSoundEffect)(); 
     int currentSoundEffectDuration;  
     int isMuted;
+    int time_alive;
+    int empty;
 } GameModel;
 
 
@@ -110,10 +112,9 @@ typedef struct {
 void initModel(GameModel *model);
 void updateModel(GameModel *model);
 
-/* Function prototypes for moving various game objects */
-void movePlayer(Player *player);
-void moveAlien(Alien *alien);
-void moveAlienShot(AlienShot *as);
-void movePlayerShot(PlayerShot *ps);
+void movePlayer(GameModel *model);
+void moveAlien(GameModel *model, int alienIndex);
+void moveAlienShot(GameModel *model, int shotIndex);
+void movePlayerShot(GameModel *model, int shotIndex);
 
 #endif /* MODEL_H */

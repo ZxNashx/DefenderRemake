@@ -21,9 +21,7 @@ char *get_video_base() {
 
 void set_video_base(char *frameBuffer){
     long old_ssp = Super(0);
-    long videoAddress = (long) frameBuffer;
-    unsigned int inputToSetScreen = videoAddress >> 8;
-    set_video_base_asm(inputToSetScreen);
+    set_video_base_asm(((long)frameBuffer) >> 8);
     Super(old_ssp);
 }
 
