@@ -18,18 +18,6 @@
 #include "splash.h"
 #include "isr.h"
 
-/* buffer size is 32k */
-char rawBackBuffer[BUFFER_SIZE + 256];
-
-char *backBuffer;
-char *frontBuffer;
-char *orig_buffer;
-
-void swapBuffers(char **frontBuffer, char **backBuffer) {
-    char *temp = *frontBuffer;
-    *frontBuffer = *backBuffer;
-    *backBuffer = temp;
-}
 
 int run_game() {
     unsigned short soundEffectPlayTime = 0;
@@ -37,10 +25,11 @@ int run_game() {
 
     int i;
     initModel(&model);
-    frontBuffer = get_video_base();
+
     clear_black(frontBuffer);
     clear_black(backBuffer); 
     set_video_base(backBuffer);
+
     /* Game initialization */
     stop_sound();
     start_music(0, game_song_A, &currentNoteIndex_GameA, &lastNoteTime_GameA);
@@ -98,7 +87,9 @@ int run_game() {
 
     } while (model.game_running == true || !render_request);
 
-
+    frontBuffer = orig_buffer;
+    backBuffer = orig_buffer;
+    set_video_base(orig_buffer);
     return model.player.score;
 }
 
@@ -111,11 +102,7 @@ int main(){
 
     /* isr setup */
     init_isr();
-
-    orig_buffer = get_video_base();
     srand(1234);
-
-
 
     /* Buffer alignment */
     backBuffer = rawBackBuffer;
@@ -123,7 +110,13 @@ int main(){
         backBuffer++;
     }
 
+    /* doest go back properly*/
+    orig_buffer = get_video_base();
+        frontBuffer = get_video_base();
+        set_video_base(backBuffer);
     while(running){
+        mouse_x = SCREEN_WIDTH / 2;
+        mouse_y = SCREEN_HEIGHT / 2;
         stop_sound();
         /* set the new highscore */
         if(game_score > high_score){

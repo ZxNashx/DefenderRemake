@@ -3,10 +3,33 @@
 
 #include "raster.h"
 #include "defs.h"
+#include "isr.h"
+#include "bitmap.h"
 
 #include <stdio.h>
 #include <linea.h>
 #include <osbind.h>
+
+void swapBuffers(char **buffer1, char **buffer2) {
+    char *temp = *buffer1;
+    *buffer1 = *buffer2;
+    *buffer2 = temp;
+}
+
+void plot_mouse(char * base){
+    mouse_x += mouse_dx;
+    mouse_y += mouse_dy;
+
+    mouse_dx = 0;
+    mouse_dy = 0;
+
+    if (mouse_x < 0) mouse_x = 0;
+    if (mouse_y < 0) mouse_y = 0;
+    if (mouse_x > SCREEN_WIDTH - 1) mouse_x = SCREEN_WIDTH - 1;
+    if (mouse_y > SCREEN_HEIGHT - 1) mouse_y = SCREEN_HEIGHT - 1;
+
+    plot_bitmap(base, mouse_bitmap, mouse_x, mouse_y, BITMAP_WIDTH, BITMAP_HEIGHT);
+}
 
 char *get_video_base() {
     long old_ssp = Super(0);

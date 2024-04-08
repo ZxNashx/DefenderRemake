@@ -3,6 +3,8 @@
 
 #include "model.h"
 
+extern unsigned int time_since_last_enemy;
+
 /*
 Function: move_left
 Arguments:

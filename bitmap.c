@@ -45,6 +45,18 @@ const unsigned int alien_bitmap[8] = {
     0x820,
 };
 
+const unsigned int mouse_bitmap[8] = {
+    0xF000,
+    0xC000,
+    0xA000,
+    0x9000,
+    0x800,
+    0x400,
+    0x200,
+    0x100
+};
+
+
 /* Function to reverse bits of a 16-bit unsigned integer */
 unsigned int reverseBits(unsigned int num) {
     unsigned int NO_OF_BITS = sizeof(num) * 8;

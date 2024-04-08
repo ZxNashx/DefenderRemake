@@ -17,7 +17,7 @@ void initModel(GameModel *model) {
     model->player.map_x_position = 0;
 
     /* default x direction*/
-    model->player.speed = 4;
+    model->player.speed = 5;
     model->player.dx = model->player.speed;
 
     /* initialize all the arrays in the game model */
@@ -47,10 +47,7 @@ void updateModel(GameModel *model) {
     int i;
 
     model->time_alive++;
-    if (model->time_alive % 700 == 0) {
-        generate_alien(model);
-    }
-
+    
     movePlayer(model);
 
     for (i = 0; i < ENTITY_COUNT; i++) {
@@ -70,6 +67,7 @@ void updateModel(GameModel *model) {
             movePlayerShot(model, i);
         }
     }
+
     /* updates */
     move_enemies(model);
     player_shot_out_of_screen(model);
@@ -79,6 +77,17 @@ void updateModel(GameModel *model) {
     player_collides_with_alien(model);
     keep_player_in_bounds(model);
 
+    /* change later*/
+    if(model->player.score == 5){
+        generate_alien(model);
+        generate_alien(model);
+        model->player.score++;
+    }else if(model->player.score == 10){
+        generate_alien(model);
+        generate_alien(model);
+        generate_alien(model);
+        model->player.score++;
+    }
 }
 
 void movePlayer(GameModel *model) {

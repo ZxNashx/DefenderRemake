@@ -4,6 +4,12 @@
 #include "psg.h"
 #include "model.h"
 
+char *backBuffer;
+char *frontBuffer;
+char *orig_buffer;
+/* buffer size is 32k */
+char rawBackBuffer[BUFFER_SIZE + 256];
+
 
 GameModel model;
 
@@ -23,6 +29,17 @@ uint32_t lastNoteTime_MenuB = 0;
 char key_buffer[KEY_BUFFER_SIZE];
 int key_buffer_start = 0;
 int key_buffer_end = 0;
+unsigned int time_since_last_enemy = 0;
+int mouse_dx = 0;
+int mouse_dy = 0;
+int mouse_x = 0;
+int mouse_y = 0;
+
+int mouse_packet_state = 0;
+unsigned char mouse_button_state;
+int mouse_dx_accumulator = 0;
+int mouse_dy_accumulator = 0;
+
 
 Vector orig_vector_vbl;
 Vector orig_vector_ikbd;

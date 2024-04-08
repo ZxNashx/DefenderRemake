@@ -5,28 +5,24 @@
 #include "model.h"
 #include "isr.h"
 #include "music.h"
+#include "events.h"
 
-
-/* Vertical Blank Interrupt Service Routine */
-void do_VBL_ISR() {
-
-    vbl_counter += 1;
-
-
-    music_update_request = true;
-
-    /* Render Request or Other Tasks */
-    render_request = true;
-
-}
-
+#include "bitmap.h"
+#include "raster.h"
 
 void init_isr(){
     orig_vector_vbl = install_vector(VBL_VECTOR, vbl_isr);
     orig_vector_ikbd = install_vector(IKBD_VECTOR, ikbd_isr);
     vbl_counter = 0;
     render_request = false;
+    music_update_request = false;
     
+}
+
+void do_VBL_ISR() {
+    music_update_request = true;
+    render_request = true;
+    vbl_counter++;
 }
 
 void clean_isr(){
@@ -48,32 +44,50 @@ Vector install_vector(int num, Vector vector){
 }
 
 
-
-
 void clear_key_buffer() {
     /* Clears the key buffer */
     key_buffer_start = key_buffer_end;
 }
 
+
 void do_IKBD_ISR() {
-    unsigned char key_scancode;
+    signed char data_byte;
     int next;
 
     /* Check if data is available in the ACIA data register */
     if (ACIA_STATUS_REGISTER & ACIA_STATUS_RX_FULL) {
-        /* Read a key scancode from the ACIA data register */
-        key_scancode = ACIA_DATA_REGISTER;
+        /* Read a byte from the ACIA data register */
+        data_byte = ACIA_DATA_REGISTER;
+        if (mouse_packet_state == 0) {
+            /* First byte of mouse packet (header) */
+            mouse_button_state = data_byte;
+            mouse_packet_state = 1;
+        } else if (mouse_packet_state == 1) {
+            /* Second byte of mouse packet (X movement) */
+            mouse_dx_accumulator += (signed char)data_byte;
+            mouse_packet_state = 2;
+        } else if (mouse_packet_state == 2) {
+            /* Third byte of mouse packet (Y movement) */
+            mouse_dy_accumulator += (signed char)data_byte;
+            mouse_packet_state = 0;
+            
+            /* Update global mouse_dx and mouse_dy */
+            mouse_dx = mouse_dx_accumulator;
+            mouse_dy = mouse_dy_accumulator;
 
+            /* Reset accumulators for next packet */
+            mouse_dx_accumulator = 0;
+            mouse_dy_accumulator = 0;
+        }
         /* Calculate next position in the buffer */
         next = (key_buffer_end + 1) % KEY_BUFFER_SIZE;
-
         /* If the buffer is full, move the start to make room */
         if (next == key_buffer_start) {
             key_buffer_start = (key_buffer_start + 1) % KEY_BUFFER_SIZE;
         }
 
         /* Store the new key and update the buffer end pointer */
-        key_buffer[key_buffer_end] = scancode_to_char(key_scancode);
+        key_buffer[key_buffer_end] = scancode_to_char(data_byte);
         key_buffer_end = next;
     }
 

@@ -37,6 +37,16 @@ extern int key_buffer_end;
 extern Vector orig_vector_vbl;
 extern Vector orig_vector_ikbd;
 
+extern int mouse_x;
+extern int mouse_y;
+extern int mouse_dx;
+extern int mouse_dy;
+
+extern int mouse_dx_accumulator;
+extern int mouse_dy_accumulator;
+extern unsigned char mouse_button_state;
+extern int mouse_packet_state;
+
 /* Assembly function declarations */
 extern void vbl_isr();
 extern void ikbd_isr();
