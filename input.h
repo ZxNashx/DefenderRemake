@@ -13,6 +13,6 @@ Description:
 */
 void handle_input(GameModel *model);
 
-void global_input(unsigned int input);
+void global_input();
 
 #endif 

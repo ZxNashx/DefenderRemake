@@ -6,7 +6,6 @@ extern char* backBuffer;
 extern char* frontBuffer;
 extern char* orig_buffer;
 extern char rawBackBuffer[BUFFER_SIZE + 256];
-
 /*
 Function: plot_pixel
 Arguments:
@@ -100,4 +99,8 @@ extern void set_video_base_asm(unsigned int);
 void set_video_base(char *base);
 void fill_rect(char *base, int x, int y, int width, int height, int black);
 void swapBuffers(char **frontBuffer, char **backBuffer);
+void plot_mouse(char * base, char * title_screen);
+void copyBuffer(char *source, char *destination, int size);
+
+
 #endif /* RASTER_H */

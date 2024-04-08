@@ -18,17 +18,13 @@
 #include "splash.h"
 #include "isr.h"
 
-
 int run_game() {
     unsigned short soundEffectPlayTime = 0;
-    unsigned short startingEnemyCount = 3;
+    unsigned short startingEnemyCount = 5;
 
     int i;
     initModel(&model);
 
-    clear_black(frontBuffer);
-    clear_black(backBuffer); 
-    set_video_base(backBuffer);
 
     /* Game initialization */
     stop_sound();
@@ -87,10 +83,32 @@ int run_game() {
 
     } while (model.game_running == true || !render_request);
 
-    frontBuffer = orig_buffer;
-    backBuffer = orig_buffer;
-    set_video_base(orig_buffer);
     return model.player.score;
+}
+
+
+
+void initialize_buffers() {
+    /* Buffer Alignment */
+    if (backBuffer == NULL) {
+        backBuffer = rawBackBuffer;
+        while(((uint32_t)backBuffer & 255) != 0) {
+            backBuffer++;
+        }
+    }
+
+    /* Only set orig_buffer once */
+    if (orig_buffer == NULL) {
+        orig_buffer = get_video_base();
+        frontBuffer = orig_buffer; 
+    }
+
+    /* Switching Buffers */
+    if (get_video_base() != backBuffer) {
+        set_video_base(backBuffer);
+    } else {
+        set_video_base(frontBuffer);
+    }
 }
 
 int main(){
@@ -100,20 +118,12 @@ int main(){
     int high_score = 0;
     isMuted = false;
 
+    orig_buffer = NULL;
+    backBuffer = NULL;
+
     /* isr setup */
     init_isr();
     srand(1234);
-
-    /* Buffer alignment */
-    backBuffer = rawBackBuffer;
-    while(( ((uint32_t)backBuffer) & 255) != 0){
-        backBuffer++;
-    }
-
-    /* doest go back properly*/
-    orig_buffer = get_video_base();
-        frontBuffer = get_video_base();
-        set_video_base(backBuffer);
     while(running){
         mouse_x = SCREEN_WIDTH / 2;
         mouse_y = SCREEN_HEIGHT / 2;
@@ -124,15 +134,18 @@ int main(){
         }
         gameMusicActive = false;
         menuMusicActive = true;
+        initialize_buffers();
         splash_screen_result = create_splash_screen(game_score, high_score);
         menuMusicActive = false;
         gameMusicActive = true;
         /* check splashscreen result*/
         if(splash_screen_result == 1){
             /* singleplayer */
+            initialize_buffers();
             running = true;
             game_score = run_game();
         }else if(splash_screen_result == 2){
+            initialize_buffers();
             /* coop */
             running = true;
             game_score = run_game();

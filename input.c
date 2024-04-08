@@ -8,6 +8,7 @@
 
 
 int main_menu_input() {
+    global_input();
     if (is_key_pressed('a') || is_key_pressed('A')) {
         return 1;
     } else if (is_key_pressed('b') || is_key_pressed('B')) {
@@ -19,10 +20,12 @@ int main_menu_input() {
     } else {
         return 0; /* Default input */
     }
+
 }
 
 
 void handle_input(GameModel *model) {
+    global_input();
     if (is_key_pressed('a') || is_key_pressed('A')) {
         /* make ship face left */
         move_left(model);
@@ -53,12 +56,8 @@ void handle_input(GameModel *model) {
     }
 }
 
-void global_input(unsigned int input){
-    unsigned char highByte = (input >> 8); 
-    unsigned char lowByte = input & 0xFF;
-
-    if (lowByte == 'm' || lowByte == 'M') {
-        /* mute the game or unmute the game */
+void global_input(){
+    if (is_key_pressed('m') || is_key_pressed('M')) {
         toggle_mute();
     }
 }

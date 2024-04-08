@@ -55,7 +55,16 @@ const unsigned int mouse_bitmap[8] = {
     0x200,
     0x100
 };
-
+const unsigned int mouse_bitmap_old[8] = {
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00
+};
 
 /* Function to reverse bits of a 16-bit unsigned integer */
 unsigned int reverseBits(unsigned int num) {

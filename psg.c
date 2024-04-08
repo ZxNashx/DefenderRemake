@@ -38,8 +38,7 @@ void set_volume(int channel, int volume) {
         write_psg(8 + channel, 0x0); /* Volume is 4 bits */
     }else{
         write_psg(8 + channel, volume & 0x0F); /* Volume is 4 bits */
-    }
-    
+    }   
 }
 
 /* Function to enable/disable channel */

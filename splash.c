@@ -15,6 +15,8 @@
 #include "isr.h"
 #include "splash.h"
 
+
+char title_screen[BUFFER_SIZE];
 int create_splash_screen(int score, int high_score) {
     int next;
     unsigned char key_scancode;
@@ -28,6 +30,7 @@ int create_splash_screen(int score, int high_score) {
     int player1X, player2X, quitX, buttonY, selection, input;
     int score_displayX, score_displayY, score_offset, score_dist;
     int randomNumber;
+
 
     start_music(0, menu_song_A, &currentNoteIndex_MenuA, &lastNoteTime_MenuA);
     start_music(1, menu_song_B, &currentNoteIndex_MenuB, &lastNoteTime_MenuB);
@@ -78,43 +81,56 @@ int create_splash_screen(int score, int high_score) {
     score_displayY = 10;
     score_offset = 120;
     score_dist = 16;
-
-    clear_black(frontBuffer);
     clear_black(backBuffer);
-    set_video_base(backBuffer);
-    plot_string(frontBuffer, title, titleStartX, titleStartY, 2);
-    plot_string(frontBuffer, subtitle, subtitleStartX, subtitleStartY, 1);
-    create_button(frontBuffer, player1X, buttonY, player1);
-    create_button(frontBuffer, player2X, buttonY, player2);
-    create_button(frontBuffer, quitX, buttonY + 50, quit);
-    plot_string(frontBuffer, "High Score: ", score_displayX, score_displayY, 1);
-    plot_number(frontBuffer, high_score, score_displayX + score_offset, score_displayY, 1);
-    plot_string(frontBuffer, "Current Score: ", score_displayX, score_displayY + score_dist, 1);
-    plot_number(frontBuffer, score, score_displayX + score_offset, score_displayY + score_dist, 1);
-    plot_string(frontBuffer, "By Axyl Carefoot-Schulz", 450, 300, 1);
+    plot_string(backBuffer, title, titleStartX, titleStartY, 2);
+    plot_string(backBuffer, subtitle, subtitleStartX, subtitleStartY, 1);
+    create_button(backBuffer, player1X, buttonY, player1);
+    create_button(backBuffer, player2X, buttonY, player2);
+    create_button(backBuffer, quitX, buttonY + 50, quit);
+    plot_string(backBuffer, "High Score: ", score_displayX, score_displayY, 1);
+     plot_number(backBuffer, high_score, score_displayX + score_offset, score_displayY, 1);
+    plot_string(backBuffer, "Current Score: ", score_displayX, score_displayY + score_dist, 1);
+    plot_number(backBuffer, score, score_displayX + score_offset, score_displayY + score_dist, 1);
+    plot_string(backBuffer, "By Axyl Carefoot-Schulz", 450, 300, 1);
+    plot_string(backBuffer, "Controls:", 10, 280, 1);
+    plot_string(backBuffer, "W,A,S,D to move, SPACE to shoot, Q to quit.", 10, 300, 1);
+
+    copyBuffer(backBuffer, title_screen, BUFFER_SIZE);
+    copyBuffer(backBuffer, frontBuffer, BUFFER_SIZE);
 
     selection = 0;
     while (selection == 0) {
+        selection = main_menu_input();
         if (render_request) {
             render_request = false;
+            copyBuffer(title_screen, backBuffer, BUFFER_SIZE);
+            plot_mouse(backBuffer, title_screen);
 
-            clear_black(backBuffer); /* add mouse clicking button*/
-            plot_mouse(backBuffer);
-            plot_string(backBuffer, title, titleStartX, titleStartY, 2);
-            plot_string(backBuffer, subtitle, subtitleStartX, subtitleStartY, 1);
-            create_button(backBuffer, player1X, buttonY, player1);
-            create_button(backBuffer, player2X, buttonY, player2);
-            create_button(backBuffer, quitX, buttonY + 50, quit);
-            plot_string(backBuffer, "High Score: ", score_displayX, score_displayY, 1);
-            plot_number(backBuffer, high_score, score_displayX + score_offset, score_displayY, 1);
-            plot_string(backBuffer, "Current Score: ", score_displayX, score_displayY + score_dist, 1);
-            plot_number(backBuffer, score, score_displayX + score_offset, score_displayY + score_dist, 1);
-            plot_string(backBuffer, "By Axyl Carefoot-Schulz", 450, 300, 1);
             set_video_base(backBuffer);
             swapBuffers(&frontBuffer, &backBuffer);
         }
 
-        selection = main_menu_input();
+        /* check mouse press with mouse_button_state */
+        if (mouse_button_state == 250) {
+            /* Check Player 1 button */
+            if (mouse_x >= player1X && mouse_x <= player1X + (player1Length * FONT_WIDTH + 20) &&
+                mouse_y >= buttonY && mouse_y <= buttonY + FONT_HEIGHT) {
+                selection = 1;  
+            }
+
+            /* Check Player 2 button */
+            if (mouse_x >= player2X && mouse_x <= player2X + (player1Length * FONT_WIDTH + 20) &&
+                mouse_y >= buttonY && mouse_y <= buttonY + FONT_HEIGHT) {
+                selection = 2;  
+            }
+
+            /* Check Quit button */
+            if (mouse_x >= quitX && mouse_x <= quitX + (quitLength * FONT_WIDTH + 20) &&
+                mouse_y >= buttonY + 50 && mouse_y <= buttonY + 50 + FONT_HEIGHT) {
+                selection = 3;  
+            }
+        }
+
         /* Update Menu Music */
         if (menuMusicActive && music_update_request) {
             music_update_request = false;

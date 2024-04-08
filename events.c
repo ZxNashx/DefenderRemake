@@ -93,7 +93,7 @@ void shoot(GameModel *model) {
                 model->playerShots[i].x = model->player.x;
             }
 			model->playerShots[i].y = model->player.y + 6;
-			model->playerShots[i].dx = model->player.dx;
+            model->playerShots[i].dx = model->player.dx < 0 ? -SHOT_SPEED : SHOT_SPEED;
 			break;
 		}
 	}
@@ -188,7 +188,7 @@ void generate_alien_shot(GameModel *model) {
                     deltaX = model->player.x - model->aliens[alienIndex].x;
 
                     /* Assign a velocity to the shot in the direction of the player */
-                    model->alienShots[i].dx = deltaX < 0 ? -4 : 4;
+                    model->alienShots[i].dx = deltaX < 0 ? -SHOT_SPEED : SHOT_SPEED;
 
                     break;
                 }

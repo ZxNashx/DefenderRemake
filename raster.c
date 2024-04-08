@@ -16,20 +16,41 @@ void swapBuffers(char **buffer1, char **buffer2) {
     *buffer2 = temp;
 }
 
-void plot_mouse(char * base){
+void copyBuffer(char *source, char *destination, int size) {
+    int register i;
+
+    /* Unroll loop to process eight items per iteration */
+    for (i = 0; i < size; i += 8) {
+        destination[i] = source[i];
+        destination[i + 1] = source[i + 1];
+        destination[i + 2] = source[i + 2];
+        destination[i + 3] = source[i + 3];
+        destination[i + 4] = source[i + 4];
+        destination[i + 5] = source[i + 5];
+        destination[i + 6] = source[i + 6];
+        destination[i + 7] = source[i + 7];
+    }
+}
+
+void plot_mouse(char * currentBuffer, char * title_screen) {
+    /* Update mouse position based on deltas */
     mouse_x += mouse_dx;
     mouse_y += mouse_dy;
 
+    /* Reset deltas */
     mouse_dx = 0;
     mouse_dy = 0;
 
+    /* Boundary checks */
     if (mouse_x < 0) mouse_x = 0;
     if (mouse_y < 0) mouse_y = 0;
-    if (mouse_x > SCREEN_WIDTH - 1) mouse_x = SCREEN_WIDTH - 1;
-    if (mouse_y > SCREEN_HEIGHT - 1) mouse_y = SCREEN_HEIGHT - 1;
+    if (mouse_x > SCREEN_WIDTH - BITMAP_WIDTH) mouse_x = SCREEN_WIDTH - BITMAP_WIDTH;
+    if (mouse_y > SCREEN_HEIGHT - BITMAP_HEIGHT) mouse_y = SCREEN_HEIGHT - BITMAP_HEIGHT;
 
-    plot_bitmap(base, mouse_bitmap, mouse_x, mouse_y, BITMAP_WIDTH, BITMAP_HEIGHT);
+    /* Plot the mouse at the new position */
+    plot_bitmap(currentBuffer, mouse_bitmap, mouse_x, mouse_y, BITMAP_WIDTH, BITMAP_HEIGHT);
 }
+
 
 char *get_video_base() {
     long old_ssp = Super(0);
