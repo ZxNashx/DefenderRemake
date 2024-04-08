@@ -10,7 +10,6 @@ void play_note(int channel, Note note) {
     set_tone(channel, note.frequency);
     enable_channel(channel, 1, 0);
     set_volume(channel, note.volume);
-
 }
 
 /* Start playing a song on a specific channel */
@@ -23,7 +22,7 @@ void start_music(int channel, Note *song, int *currentNote, uint32_t *lastNoteTi
 /* Update music function */
 void update_music(int channel, Note *song, int *currentNoteIndex, uint32_t *lastNoteTime, int numNotes) {
     uint32_t elapsedTime = vbl_counter  - *lastNoteTime;
-
+    
     if (elapsedTime >= song[*currentNoteIndex].duration) {
         *currentNoteIndex = (*currentNoteIndex + 1) % numNotes;
         *lastNoteTime = vbl_counter;

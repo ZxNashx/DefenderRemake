@@ -43,8 +43,8 @@ extern Note menu_song_A[];
 extern Note menu_song_B[];
 
 /* number of notes in each song */
-#define GAME_A_NOTECOUNT 14
-#define GAME_B_NOTECOUNT 14
+#define GAME_A_NOTECOUNT 32
+#define GAME_B_NOTECOUNT 16
 
 #define MENU_A_NOTECOUNT 14
 #define MENU_B_NOTECOUNT 14
@@ -52,5 +52,5 @@ extern Note menu_song_B[];
 void play_note(int channel, Note note);
 void start_music(int channel, Note *song, int *currentNote, uint32_t *lastNoteTime);
 void update_music(int channel, Note *song, int *currentNoteIndex, uint32_t *lastNoteTime, int numNotes);
-
+extern int music_update_request;
 #endif /* MUSIC_H */

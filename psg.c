@@ -1,6 +1,6 @@
 #include "defs.h"
 #include "psg.h"
-
+#include "isr.h"
 #include <stdio.h>
 #include <osbind.h>
 
@@ -20,6 +20,7 @@ void write_psg(int reg, uint8_t val) {
     /* Switch back to user mode */
     Super(old_ssp);
 }
+
 /* Function to set the tone (frequency) of a channel */
 void set_tone(int channel, int tuning) {
     int fineTune = tuning & 0x0F;   /* Lower 4 bits */

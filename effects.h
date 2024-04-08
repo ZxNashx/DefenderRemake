@@ -16,4 +16,6 @@ void sound_game_over();
 
 void no_sound_effect();
 
+void boundry_hit();
+
 #endif 

@@ -98,7 +98,7 @@ void shoot(GameModel *model) {
 		}
 	}
 	model->currentSoundEffect = sound_playershot;
-	model->currentSoundEffectDuration = 3;
+	model->currentSoundEffectDuration = 1;
 }
 
 /* Quit the game */
@@ -358,7 +358,11 @@ void toggle_mute() {
 void keep_player_in_bounds(GameModel *model){
     if(model->player.map_x_position > MAP_SIZE){
         move_left(model);
+        model->currentSoundEffect = boundry_hit;
+        model->currentSoundEffectDuration = 3;
     }else if(model->player.map_x_position < -MAP_SIZE){
         move_right(model);
+        model->currentSoundEffect = boundry_hit;
+        model->currentSoundEffectDuration = 3;
     }
 }

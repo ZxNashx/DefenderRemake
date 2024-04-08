@@ -9,24 +9,15 @@
 
 /* Vertical Blank Interrupt Service Routine */
 void do_VBL_ISR() {
+
     vbl_counter += 1;
 
-    /* Update Game Music */
-    if (gameMusicActive && 0) {
-        update_music(0, game_song_A, &currentNoteIndex_GameA, &lastNoteTime_GameA, GAME_A_NOTECOUNT);
-        /* Update for game_song_B if required */
-        update_music(1, game_song_B, &currentNoteIndex_GameB, &lastNoteTime_GameB, GAME_B_NOTECOUNT);
-    }
 
-    /* Update Menu Music */
-    if (menuMusicActive && 0) {
-        update_music(0, menu_song_A, &currentNoteIndex_MenuA, &lastNoteTime_MenuA, MENU_A_NOTECOUNT);
-        /* Update for menu_song_B if required */
-        /* update_music(1, menu_song_B, &currentNoteIndex_MenuB, &lastNoteTime_MenuB, MENU_B_NOTECOUNT); */
-    }
+    music_update_request = true;
 
     /* Render Request or Other Tasks */
     render_request = true;
+
 }
 
 

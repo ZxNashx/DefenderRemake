@@ -42,6 +42,10 @@ int run_game() {
     clear_black(backBuffer); 
     set_video_base(backBuffer);
     /* Game initialization */
+    stop_sound();
+    start_music(0, game_song_A, &currentNoteIndex_GameA, &lastNoteTime_GameA);
+    start_music(1, game_song_B, &currentNoteIndex_GameB, &lastNoteTime_GameB);
+
 
     model.currentSoundEffect = no_sound_effect;
 
@@ -54,6 +58,13 @@ int run_game() {
     /* Main game loop */
     do {
         handle_input(&model);
+        if (gameMusicActive && music_update_request) {
+            music_update_request = false;
+            update_music(0, game_song_A, &currentNoteIndex_GameA, &lastNoteTime_GameA, GAME_A_NOTECOUNT);
+            /* Update for menu_song_B if required */
+            update_music(1, game_song_B, &currentNoteIndex_GameB, &lastNoteTime_GameB, GAME_B_NOTECOUNT);
+        }
+
         if (render_request) {
             render_request = false;
             updateModel(&model);

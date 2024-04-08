@@ -40,6 +40,8 @@ extern Vector orig_vector_ikbd;
 /* Assembly function declarations */
 extern void vbl_isr();
 extern void ikbd_isr();
+extern void disable_interrupts();
+extern void enable_interrupts();
 
 #define ACIA_STATUS_REGISTER (*(volatile unsigned char *)0xFFFFFC00)
 #define ACIA_DATA_REGISTER (*(volatile unsigned char *)0xFFFFFC02)

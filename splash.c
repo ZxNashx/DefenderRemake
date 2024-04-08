@@ -17,13 +17,9 @@
 
 int create_splash_screen(int score, int high_score) {
     char *videoBase; 
-
     int next;
     unsigned char key_scancode;
-    long old_ssp;
     char* buffer;
-
-
     const char *title;
     const char *subtitle;
     const char *player1;
@@ -38,12 +34,10 @@ int create_splash_screen(int score, int high_score) {
 
     /* music */
     uint32_t timeThen, timeNow, timeElapsed, lastMusicUpdate;
-    int currentNoteA = 0, currentNoteB = 0;
-    uint32_t lastNoteTimeA = 0, lastNoteTimeB = 0;
-    int numNotesA = GAME_A_NOTECOUNT;
-    int numNotesB = GAME_B_NOTECOUNT;
-    start_music(0, menu_song_A, &currentNoteA, &lastNoteTimeA);
-    start_music(1, menu_song_B, &currentNoteB, &lastNoteTimeB);
+
+    start_music(0, menu_song_A, &currentNoteIndex_MenuA, &lastNoteTime_MenuA);
+    start_music(1, menu_song_B, &currentNoteIndex_MenuB, &lastNoteTime_MenuB);
+
     lastMusicUpdate = get_time(); 
     timeThen = get_time(); 
     /* Initialize variables */
@@ -110,9 +104,16 @@ int create_splash_screen(int score, int high_score) {
 
     plot_string(videoBase, "By Axyl Carefoot-Schulz", 450, 300, 1);
     selection = 0;
-    plot_character(videoBase, 'e', 100, 150, 1);
     while (selection == 0) {
         selection = main_menu_input();
+        /* Update Menu Music */
+        if (menuMusicActive && music_update_request) {
+            music_update_request = false;
+            update_music(0, menu_song_A, &currentNoteIndex_MenuA, &lastNoteTime_MenuA, MENU_A_NOTECOUNT);
+            /* Update for menu_song_B if required */
+            update_music(1, menu_song_B, &currentNoteIndex_MenuB, &lastNoteTime_MenuB, MENU_B_NOTECOUNT);
+        }
+
     }
 
     return selection;

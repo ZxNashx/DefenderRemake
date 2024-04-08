@@ -16,7 +16,6 @@
 #define SHOT_COUNT 256
 #define ENTITY_COUNT 256
 
-
 typedef unsigned char uint8_t; 
 typedef signed char int8_t;   
 typedef int int16_t;         
