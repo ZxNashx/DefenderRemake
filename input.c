@@ -2,9 +2,11 @@
 #include "model.h"
 #include "defs.h"
 #include "events.h"
-#include "isr.c"
+#include "isr.h"
 
 #include <osbind.h>
+
+
 int main_menu_input() {
     if (is_key_pressed('a') || is_key_pressed('A')) {
         return 1;

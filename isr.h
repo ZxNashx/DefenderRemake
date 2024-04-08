@@ -34,6 +34,8 @@ extern uint32_t lastNoteTime_MenuB;
 extern char key_buffer[KEY_BUFFER_SIZE];
 extern int key_buffer_start;
 extern int key_buffer_end;
+extern Vector orig_vector_vbl;
+extern Vector orig_vector_ikbd;
 
 /* Assembly function declarations */
 extern void vbl_isr();

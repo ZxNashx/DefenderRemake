@@ -17,17 +17,10 @@ _ikbd_isr:
     movem.l     (sp)+,d0-d2/a0-a2  
     rte                            
 
-
-; below do not work
 _disable_interrupts:
-    movem.l  d0,-(sp)         
-    move.w   sr,d0            
-    ori.w    #$0700,sr      
-    movem.l  (sp)+,d0         
-    rts                       
+    move.w #$2700,sr  
+    rts               
 
 _enable_interrupts:
-    movem.l  d0,-(sp)         
-    move.w   d0,sr            
-    movem.l  (sp)+,d0         
-    rts                       
+    move.w #$2000,sr   
+    rts             

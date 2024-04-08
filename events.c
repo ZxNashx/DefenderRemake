@@ -161,7 +161,7 @@ void generate_alien_shot(GameModel *model) {
     int i, alienIndex;
     int foundActiveAlien = false;
     int deltaX;
-    if (chance == 0) { /* 1 in 10 chance */
+    if (chance == 5) { /* 1 in 10 chance */
         /* Find an active alien randomly */
         for (i = 0; i < ENTITY_COUNT; i++) {
             alienIndex = rand() % ENTITY_COUNT;

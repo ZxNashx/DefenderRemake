@@ -3,8 +3,6 @@
 #include "defs.h"
 #include "events.h"
 
-GameModel model;
-
 void initModel(GameModel *model) {
     int i;
     model->player.x = 320; 

@@ -7,6 +7,7 @@
 #define PSG_REGISTERS ((volatile uint8_t *)0xFFFF8800)
 
 extern int isMuted;
+extern uint8_t currentMixer;
 
 void write_psg(int reg, uint8_t val);
 uint8_t read_psg(int reg);

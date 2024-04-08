@@ -4,11 +4,6 @@
 #include <stdio.h>
 #include <osbind.h>
 
-/* Global variable to keep track of the current state of the mixer register */
-static uint8_t currentMixer = 0x3F;  /* All three channels disabled initially */
-int isMuted;
-
-
 /* Function to write a value to a PSG register */
 void write_psg(int reg, uint8_t val) {
     long old_ssp;

@@ -108,7 +108,7 @@ int create_splash_screen(int score, int high_score) {
     plot_string(videoBase, "Current Score: ", score_displayX, score_displayY + score_dist, 1);
     plot_number(videoBase, score, score_displayX + score_offset, score_displayY + score_dist, 1);
 
-
+    plot_string(videoBase, "By Axyl Carefoot-Schulz", 450, 300, 1);
     selection = 0;
     plot_character(videoBase, 'e', 100, 150, 1);
     while (selection == 0) {

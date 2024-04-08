@@ -6,24 +6,28 @@
 #include "isr.h"
 #include "music.h"
 
-unsigned int vbl_counter = 0;
-int render_request = 0;
-int gameMusicActive = false;
-int menuMusicActive = false;
-int currentNoteIndex_GameA = 0;
-int currentNoteIndex_GameB = 0;
-int currentNoteIndex_MenuA = 0;
-int currentNoteIndex_MenuB = 0;
-uint32_t lastNoteTime_GameA = 0;
-uint32_t lastNoteTime_GameB = 0;
-uint32_t lastNoteTime_MenuA = 0;
-uint32_t lastNoteTime_MenuB = 0;
-char key_buffer[KEY_BUFFER_SIZE];
-int key_buffer_start = 0;
-int key_buffer_end = 0;
 
-Vector orig_vector_vbl;
-Vector orig_vector_ikbd;
+/* Vertical Blank Interrupt Service Routine */
+void do_VBL_ISR() {
+    vbl_counter += 1;
+
+    /* Update Game Music */
+    if (gameMusicActive && 0) {
+        update_music(0, game_song_A, &currentNoteIndex_GameA, &lastNoteTime_GameA, GAME_A_NOTECOUNT);
+        /* Update for game_song_B if required */
+        update_music(1, game_song_B, &currentNoteIndex_GameB, &lastNoteTime_GameB, GAME_B_NOTECOUNT);
+    }
+
+    /* Update Menu Music */
+    if (menuMusicActive && 0) {
+        update_music(0, menu_song_A, &currentNoteIndex_MenuA, &lastNoteTime_MenuA, MENU_A_NOTECOUNT);
+        /* Update for menu_song_B if required */
+        /* update_music(1, menu_song_B, &currentNoteIndex_MenuB, &lastNoteTime_MenuB, MENU_B_NOTECOUNT); */
+    }
+
+    /* Render Request or Other Tasks */
+    render_request = true;
+}
 
 
 void init_isr(){
@@ -52,31 +56,7 @@ Vector install_vector(int num, Vector vector){
     return orig;
 }
 
-/* Vertical Blank Interrupt Service Routine */
-void do_VBL_ISR() {
-    vbl_counter += 1;
 
-    /* Update Game Music */
-    if (gameMusicActive) {
-        update_music(0, game_song_A, &currentNoteIndex_GameA, &lastNoteTime_GameA, GAME_A_NOTECOUNT);
-        /* Update for game_song_B if required */
-        update_music(1, game_song_B, &currentNoteIndex_GameB, &lastNoteTime_GameB, GAME_B_NOTECOUNT);
-    }
-
-    /* Update Menu Music */
-    if (menuMusicActive) {
-        update_music(0, menu_song_A, &currentNoteIndex_MenuA, &lastNoteTime_MenuA, MENU_A_NOTECOUNT);
-        /* Update for menu_song_B if required */
-        /* update_music(1, menu_song_B, &currentNoteIndex_MenuB, &lastNoteTime_MenuB, MENU_B_NOTECOUNT); */
-    }
-
-    /* Render Request or Other Tasks */
-    render_request = true;
-}
-
-
-
-/* Include your existing play_note, start_music, and update_music functions */
 
 
 void clear_key_buffer() {

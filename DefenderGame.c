@@ -58,7 +58,6 @@ int run_game() {
             render_request = false;
             updateModel(&model);
 
-
            if(model.player.lives <= 0){
                 model.game_running = false;
                 /**/
@@ -103,7 +102,7 @@ int main(){
     init_isr();
 
     orig_buffer = get_video_base();
-    srand(0);
+    srand(1234);
 
 
 
