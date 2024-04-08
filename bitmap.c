@@ -66,3 +66,11 @@ void mirrorBitmap(const unsigned int *bitmap, unsigned int *mirroredBitmap, unsi
         mirroredBitmap[i] = reverseBits(bitmap[i]);
     }
 }
+
+void copyBitmap(const unsigned int source[], unsigned int destination[], int size) {
+    int i; /* Loop counter declared at the top of the function */
+
+    for (i = 0; i < size; i++) {
+        destination[i] = source[i];
+    }
+}

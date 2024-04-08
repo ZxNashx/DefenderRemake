@@ -329,16 +329,6 @@ void alien_shot_out_of_screen(GameModel *model) {
     }
 }
 
-/* Handle the player running out of lives */
-int player_runs_out_of_lives(GameModel *model) {
-    /* Check player's lives and handle game over logic */
-    if(model->player.lives <= 0){
-    	return true;
-    }else{
-    	return false;
-    }
-}
-
 /* Handle collision between player's ship and an alien ship */
 void player_collides_with_alien(GameModel *model) {
     int i;
@@ -358,9 +348,17 @@ void player_collides_with_alien(GameModel *model) {
     }
 }
 
-void toggle_mute(GameModel *model) {
-	model->isMuted = !model->isMuted;
-    if(model->isMuted){
+void toggle_mute() {
+	isMuted = !isMuted;
+    if(isMuted){
         stop_sound();
+    }
+}
+
+void keep_player_in_bounds(GameModel *model){
+    if(model->player.map_x_position > MAP_SIZE){
+        move_left(model);
+    }else if(model->player.map_x_position < -MAP_SIZE){
+        move_right(model);
     }
 }

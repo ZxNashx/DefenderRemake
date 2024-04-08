@@ -128,15 +128,6 @@ Description:
 void alien_shot_out_of_screen(GameModel *model);
 
 /*
-Function: player_runs_out_of_lives
-Arguments:
-    GameModel *model: Pointer to the game model.
-Description:
-    Checks the player's lives and handles the game over logic.
-*/
-int player_runs_out_of_lives(GameModel *model);
-
-/*
 Function: player_collides_with_alien
 Arguments:
     GameModel *model: Pointer to the game model.
@@ -146,5 +137,6 @@ Description:
 void player_collides_with_alien(GameModel *model);
 
 void freeze_player(GameModel *model);
-void toggle_mute(GameModel *model);
+void toggle_mute();
+void keep_player_in_bounds(GameModel *model);
 #endif /* EVENTS_H */

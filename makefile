@@ -45,6 +45,8 @@ all: defend~1.tos #graphi~1.tos modelt~1.tos render~1.tos soundd~1.tos
 
 video.o: video.s
 	gen -D -L2 video.s
+isr_asm.o: isr_asm.s
+	gen -D -L2 isr_asm.s
 
 input.o: input.c input.h 
 	$(CC) $(CFLAGS) -c input.c
@@ -85,11 +87,15 @@ font.o: font.c font.h
 
 text.o: text.c text.h
 	$(CC) $(CFLAGS) -c text.c
-# Compile defender game
-defend~1.tos: $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o music.o helper.o effects.o video.o splash.o text.o font.o
-	$(CC) $(CFLAGS) $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o psg.o input.o music.o helper.o effects.o events.o video.o splash.o text.o font.o -o defend~1.tos
 
-$(DEFENDERGAME_OBJ): $(DEFENDERGAME_SRC) bitmap.h raster.h renderer.h model.h defs.h psg.h music.h helper.h events.h input.h splash.h text.h font.h
+isr.o: isr.c isr.h
+	$(CC) $(CFLAGS) -c isr.c
+
+# Compile defender game
+defend~1.tos: $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o music.o helper.o effects.o video.o splash.o text.o font.o isr.o isr_asm.o
+	$(CC) $(CFLAGS) $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o psg.o input.o music.o helper.o effects.o events.o video.o splash.o text.o font.o isr.o isr_asm.o -o defend~1.tos
+
+$(DEFENDERGAME_OBJ): $(DEFENDERGAME_SRC) bitmap.h raster.h renderer.h model.h defs.h psg.h music.h helper.h events.h input.h splash.h text.h font.h isr.h
 	$(CC) $(CFLAGS) -c $(DEFENDERGAME_SRC)
 
 # Clean target to remove built files

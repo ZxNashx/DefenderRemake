@@ -1,12 +1,29 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <osbind.h>
+
 #include "defs.h"
 #include "raster.h"
 #include "font.h"
 #include "text.h"
 #include "input.h"
 
+#include "music.h"
+#include "helper.h"
+#include "psg.h"
+
+#include "isr.h"
+#include "splash.h"
 
 int create_splash_screen(int score, int high_score) {
     char *videoBase; 
+
+    int next;
+    unsigned char key_scancode;
+    long old_ssp;
+    char* buffer;
+
+
     const char *title;
     const char *subtitle;
     const char *player1;
@@ -17,7 +34,18 @@ int create_splash_screen(int score, int high_score) {
     int player1X, player2X, quitX, buttonY, selection, input;
     int score_displayX, score_displayY, score_offset, score_dist;
     int randomNumber;
+    char inputChar;
 
+    /* music */
+    uint32_t timeThen, timeNow, timeElapsed, lastMusicUpdate;
+    int currentNoteA = 0, currentNoteB = 0;
+    uint32_t lastNoteTimeA = 0, lastNoteTimeB = 0;
+    int numNotesA = GAME_A_NOTECOUNT;
+    int numNotesB = GAME_B_NOTECOUNT;
+    start_music(0, menu_song_A, &currentNoteA, &lastNoteTimeA);
+    start_music(1, menu_song_B, &currentNoteB, &lastNoteTimeB);
+    lastMusicUpdate = get_time(); 
+    timeThen = get_time(); 
     /* Initialize variables */
     videoBase = get_video_base(); 
     randomNumber = rand() % 10 + 1;
@@ -81,14 +109,11 @@ int create_splash_screen(int score, int high_score) {
     plot_number(videoBase, score, score_displayX + score_offset, score_displayY + score_dist, 1);
 
 
-    /* Loop indefinitely */
-    /* Input handling loop */
-    flush_input();
     selection = 0;
+    plot_character(videoBase, 'e', 100, 150, 1);
     while (selection == 0) {
-        /* Wait for and then process user input */
-        input = read_input(); /* Assuming read_input() is a function that gets the input */
-        selection = main_menu_input(input);
+        selection = main_menu_input();
     }
+
     return selection;
 }

@@ -44,5 +44,6 @@ typedef unsigned long uint32_t;
 
 #define MAP_SIZE 500
 
+#define KEY_BUFFER_SIZE 8
 
 #endif

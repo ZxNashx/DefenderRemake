@@ -3,6 +3,8 @@
 #include "defs.h"
 #include "events.h"
 
+GameModel model;
+
 void initModel(GameModel *model) {
     int i;
     model->player.x = 320; 
@@ -13,7 +15,6 @@ void initModel(GameModel *model) {
     model->player.lives = model->player.max_lives; 
     model->player.score = 0;
     model->game_running = true;
-    model->isMuted = true;
     model->time_alive = 0;
     model->player.map_x_position = 0;
 

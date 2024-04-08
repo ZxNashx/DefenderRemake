@@ -2,10 +2,7 @@
 #define INPUT_H
 #include "model.h"
 
-int input_available();
-
-unsigned int read_input();
-int main_menu_input(unsigned int input);
+int main_menu_input();
 /*
 Function: handle_input
 Arguments:
@@ -14,8 +11,8 @@ Arguments:
 Description:
     Processes keyboard input for controlling the game. It interprets both ASCII characters and scan codes to handle various actions like quitting the game or responding to directional inputs. Specifically, it stops the game if 'Q' or 'q' is pressed. Other controls are managed by interpreting the scan codes, especially for non-ASCII keys like arrow keys.
 */
-void handle_input(GameModel *model, unsigned int input);
+void handle_input(GameModel *model);
 
-void flush_input();
+void global_input(unsigned int input);
 
 #endif 

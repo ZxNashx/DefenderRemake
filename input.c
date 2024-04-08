@@ -2,81 +2,61 @@
 #include "model.h"
 #include "defs.h"
 #include "events.h"
+#include "isr.c"
+
 #include <osbind.h>
-
-int input_available() {
-    return Cconis();
-}
-unsigned int read_input() {
-    if (input_available()) {
-        return Cnecin();  
-    }
-    return 0;
-}
-
-int main_menu_input(unsigned int input){
-    unsigned char highByte = (input >> 8); 
-    unsigned char lowByte = input & 0xFF;
-
-    if (lowByte == 'a' || lowByte == 'A') {
+int main_menu_input() {
+    if (is_key_pressed('a') || is_key_pressed('A')) {
         return 1;
-    }
-    else if (lowByte == 'b' || lowByte == 'B') {
+    } else if (is_key_pressed('b') || is_key_pressed('B')) {
         return 2;
-    }
-    else if (lowByte == 'c' || lowByte == 'C') {
+    } else if (is_key_pressed('c') || is_key_pressed('C')) {
         return 3;
+    } else if (is_key_pressed('q') || is_key_pressed('Q')) {
+        return 3; 
+    } else {
+        return 0; /* Default input */
     }
-    else if (lowByte == 'q' || lowByte == 'Q') {
-        return 3;
-    }else{
-        return 0; /* default input */
-    }
-    flush_input();
 }
 
-void handle_input(GameModel *model, unsigned int input) {
-    unsigned char highByte = (input >> 8); 
-    unsigned char lowByte = input & 0xFF;
 
-    if (lowByte == 'a' || lowByte == 'A') {
+void handle_input(GameModel *model) {
+    if (is_key_pressed('a') || is_key_pressed('A')) {
         /* make ship face left */
         move_left(model);
-    }
-    else if (lowByte == 'd' || lowByte == 'D') {
+    }else if (is_key_pressed('d') || is_key_pressed('D')) {
         /* make ship face right */
         move_right(model);
-    }
-    else if (lowByte == 'w' || lowByte == 'W') {
+    }else if (is_key_pressed('w') || is_key_pressed('W')) {
         /* move ship upwards */
         move_up(model);
     }
-    else if (lowByte == 's' || lowByte == 'S') {
+    else if (is_key_pressed('s') || is_key_pressed('S')) {
         /* move ship downwards */
         move_down(model);
     }
-    else if (highByte == SCAN_CODE_SPACE || 
-        lowByte == 'x' ||
-        lowByte == 'X') {
-        /* shoot in in direction facing */
+    else if (is_key_pressed(' ') || is_key_pressed('x') || is_key_pressed('X')) {
+        /* Shoot in the direction facing */
         shoot(model);
     }
-    else if (lowByte == 'q' || lowByte == 'Q') {
+    else if (is_key_pressed('q') || is_key_pressed('Q')) {
+        /* Quit the game */
         quit_game(model);
     }
-    else if (lowByte == 'm' || lowByte == 'M') {
-        /* mute the game or unmute the game */
-        toggle_mute(model);
-    }
-    else if (lowByte == 'e' || lowByte == 'E') {
+    else if (is_key_pressed('e') || is_key_pressed('E')) {
+        /* Spawn an enemy */
         generate_alien(model);
+    }else{
+        freeze_player(model);
     }
-    flush_input();
-
 }
 
-void flush_input(){
-    while(read_input() != 0){
-        /* flush the input buffer */
+void global_input(unsigned int input){
+    unsigned char highByte = (input >> 8); 
+    unsigned char lowByte = input & 0xFF;
+
+    if (lowByte == 'm' || lowByte == 'M') {
+        /* mute the game or unmute the game */
+        toggle_mute();
     }
 }

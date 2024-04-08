@@ -6,6 +6,8 @@
 
 /* Global variable to keep track of the current state of the mixer register */
 static uint8_t currentMixer = 0x3F;  /* All three channels disabled initially */
+int isMuted;
+
 
 /* Function to write a value to a PSG register */
 void write_psg(int reg, uint8_t val) {
@@ -36,7 +38,12 @@ void set_tone(int channel, int tuning) {
 /* Function to set the volume of a channel */
 void set_volume(int channel, int volume) {
     /* Volume register for each channel is at 8, 9, and 10 */
-    write_psg(8 + channel, volume & 0x0F); /* Volume is 4 bits */
+    if(isMuted){
+        write_psg(8 + channel, 0x0); /* Volume is 4 bits */
+    }else{
+        write_psg(8 + channel, volume & 0x0F); /* Volume is 4 bits */
+    }
+    
 }
 
 /* Function to enable/disable channel */

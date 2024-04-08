@@ -3,10 +3,6 @@
 
 #include "defs.h"
 
-/* number of notes in each song */
-#define NUM_NOTES_IN_SONG_A 14
-#define NUM_NOTES_IN_SONG_B 14
-
 /* Define the structure for musical notes */
 typedef struct {
     int frequency; /* Frequency of the note */
@@ -40,18 +36,21 @@ typedef struct {
 #define B     253
 
 
-extern Note song_A[];
-extern Note song_B[];
+extern Note game_song_A[];
+extern Note game_song_B[];
 
-/*
-q = quit, m = mute
-run.g in atari ST to run
-f12 to run fast
-*/
+extern Note menu_song_A[];
+extern Note menu_song_B[];
 
+/* number of notes in each song */
+#define GAME_A_NOTECOUNT 14
+#define GAME_B_NOTECOUNT 14
+
+#define MENU_A_NOTECOUNT 14
+#define MENU_B_NOTECOUNT 14
 
 void play_note(int channel, Note note);
 void start_music(int channel, Note *song, int *currentNote, uint32_t *lastNoteTime);
-void update_music(int channel, Note *song, int *currentNote, uint32_t *lastNoteTime, uint32_t currentTime, int numNotes);
+void update_music(int channel, Note *song, int *currentNoteIndex, uint32_t *lastNoteTime, int numNotes);
 
 #endif /* MUSIC_H */
