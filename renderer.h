@@ -33,6 +33,17 @@ Description:
     Renders an alien's spaceship on the screen.
 */
 void renderAlien(Alien *alien, char *base);
+
+
+/*
+Function: renderShot
+Arguments:
+    char *base: The start of the video memory.
+    unsigned int x: The x coordinate where the shot will be rendered.
+    unsigned int y: The y coordinate where the shot will be rendered.
+Description:
+    Renders a shot or projectile on the screen at the specified coordinates.
+*/
 void renderShot(char *base, unsigned int x, unsigned int y);
 
 /*

@@ -18,6 +18,7 @@
 #define SHOT_COUNT 256
 #define ENTITY_COUNT 256
 
+
 typedef unsigned char uint8_t; 
 typedef signed char int8_t;   
 typedef int int16_t;         
@@ -43,7 +44,9 @@ typedef unsigned long uint32_t;
 #define FONT_HEIGHT 8  
 #define BITS_IN_BYTE 8
 
+/* how far you can fly before it turns you around */
 #define MAP_SIZE 500
+
 
 #define KEY_BUFFER_SIZE 8
 

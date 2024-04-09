@@ -2,7 +2,7 @@
 #define INPUT_H
 #include "model.h"
 
-int main_menu_input();
+
 /*
 Function: handle_input
 Arguments:
@@ -13,6 +13,21 @@ Description:
 */
 void handle_input(GameModel *model);
 
+/*
+Function: main_menu_input
+Returns:
+    int: The result or choice made by the player in the main menu.
+Description:
+    Handles user input in the main menu of the game. This function captures and processes the player's keyboard inputs to navigate through menu items like starting the game, changing settings, or exiting. The return value indicates the player's choice.
+*/
+int main_menu_input();
+
+/*
+Function: global_input
+Arguments: None.
+Description:
+    Processes global keyboard inputs that are applicable throughout the game or application, regardless of the current state or screen. This may include inputs like volume control, pause, or other global commands.
+*/
 void global_input();
 
 #endif 

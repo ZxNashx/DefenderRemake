@@ -1,19 +1,7 @@
 
-Defender Game README File
-
-Course:		COMP 2659 - Computing Machinery II
-University:	Mount Royal University
-Name:		Axyl Carefoot-Schulz
-ID:			201694318
-Email:		acare318@mtroyal.ca
-
 Details:
-This is the hand-in for the second check-in containing project
-stages 5,6 and 7. 
-
-
-Notes:
-
+This is the final atari game. I did not track each game stage. 
 
 Issues:
-- "make clean" does not work, must manually "rm *.o" and "rm *.tos".
+	- Mouse moves slow in main menu because I redraw the buffer every frame. 
+	- Double def of _enable_channel in isr_asm.o (???)

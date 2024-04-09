@@ -16,26 +16,22 @@ void swapBuffers(char **buffer1, char **buffer2) {
     *buffer2 = temp;
 }
 
-void copyBuffer(char *source, char *destination, int size) {
+void copyBuffer(char *source, char *destination, int start, int size) {
     int register i;
-
-    /* Unroll loop to process eight items per iteration */
-    for (i = 0; i < size; i += 8) {
+    for (i = start; i < size; i++) {
         destination[i] = source[i];
-        destination[i + 1] = source[i + 1];
-        destination[i + 2] = source[i + 2];
-        destination[i + 3] = source[i + 3];
-        destination[i + 4] = source[i + 4];
-        destination[i + 5] = source[i + 5];
-        destination[i + 6] = source[i + 6];
-        destination[i + 7] = source[i + 7];
     }
 }
 
-void plot_mouse(char * currentBuffer, char * title_screen) {
+int plot_mouse(char * currentBuffer, char * title_screen) {
+    int has_moved = false;
     /* Update mouse position based on deltas */
     mouse_x += mouse_dx;
     mouse_y += mouse_dy;
+
+    if(mouse_dx > 0 || mouse_y > 0){
+        has_moved = true;
+    }
 
     /* Reset deltas */
     mouse_dx = 0;
@@ -49,6 +45,7 @@ void plot_mouse(char * currentBuffer, char * title_screen) {
 
     /* Plot the mouse at the new position */
     plot_bitmap(currentBuffer, mouse_bitmap, mouse_x, mouse_y, BITMAP_WIDTH, BITMAP_HEIGHT);
+    return has_moved;
 }
 
 
@@ -92,14 +89,14 @@ void fill_rect(char *base, int x, int y, int width, int height, int black) {
 }
 
 
-/* magic */
+/* magic 
 void clear_black(char *base) {
     unsigned int i;
     for (i = 0; i < longs_buffer; i++) {
         ((unsigned long*)base)[i] = 0xFFFFFFFF;
     }
 }
-
+*/
 
 void draw_hline(char *base, int x1, int x2, int y) {
     int x;  /* Declare variable at the start of the function */

@@ -49,8 +49,41 @@ extern Note menu_song_B[];
 #define MENU_A_NOTECOUNT 14
 #define MENU_B_NOTECOUNT 14
 
+/*
+Function: play_note
+Arguments:
+    int channel: The PSG channel (0-2) on which to play the note.
+    Note note: The note structure containing the frequency and duration of the note.
+Description:
+    Plays a single note on the specified channel of the PSG. The note is defined by its frequency and duration.
+*/
 void play_note(int channel, Note note);
+
+/*
+Function: start_music
+Arguments:
+    int channel: The PSG channel (0-2) to start playing music on.
+    Note *song: Pointer to an array of notes constituting the song.
+    int *currentNote: Pointer to an integer tracking the index of the current note in the song.
+    uint32_t *lastNoteTime: Pointer to a variable tracking the time at which the last note was played.
+Description:
+    Starts playing a musical piece on a specified channel, beginning from the first note. It updates the current note index and the last note time.
+*/
 void start_music(int channel, Note *song, int *currentNote, uint32_t *lastNoteTime);
+
+/*
+Function: update_music
+Arguments:
+    int channel: The PSG channel (0-2) where music is being played.
+    Note *song: Pointer to an array of notes constituting the song.
+    int *currentNoteIndex: Pointer to an integer tracking the index of the current note in the song.
+    uint32_t *lastNoteTime: Pointer to a variable tracking the time since the last note was played.
+    int numNotes: The total number of notes in the song.
+Description:
+    Updates the musical playback on a specified channel. It progresses through the song based on the current note index and the time elapsed since the last note was played, looping over if necessary.
+*/
 void update_music(int channel, Note *song, int *currentNoteIndex, uint32_t *lastNoteTime, int numNotes);
+
+
 extern int music_update_request;
 #endif /* MUSIC_H */

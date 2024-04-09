@@ -37,9 +37,6 @@ int mouse_y = 0;
 
 int mouse_packet_state = 0;
 unsigned char mouse_button_state;
-int mouse_dx_accumulator = 0;
-int mouse_dy_accumulator = 0;
-
 
 Vector orig_vector_vbl;
 Vector orig_vector_ikbd;

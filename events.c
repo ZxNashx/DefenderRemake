@@ -24,9 +24,6 @@ void move_left(GameModel *model) {
 
     /* Set dx to move left */
     model->player.dx = -model->player.speed;
-    if (model->player.x < 0) {
-        model->player.x = 0;
-    }
 }
 
 /*
@@ -48,9 +45,6 @@ void move_right(GameModel *model) {
 
     /* Set dx to move right */
     model->player.dx = model->player.speed;
-    if (model->player.x > SCREEN_WIDTH - BITMAP_WIDTH) {
-        model->player.x = SCREEN_WIDTH - BITMAP_WIDTH;
-    }
 }
 
 void freeze_player(GameModel *model){
@@ -61,20 +55,14 @@ void freeze_player(GameModel *model){
 void move_down(GameModel *model) {
     /* Increase player's y-coordinate */
     model->player.dy = model->player.speed;
-    /* Ensure the player doesn't move off-screen */
-    if (model->player.y > SCREEN_HEIGHT) {
-        model->player.y = SCREEN_HEIGHT;
-    }
+
 }
 
 /* Move player's ship upwards */
 void move_up(GameModel *model) {
     /* Decrease player's y-coordinate */
     model->player.dy = -model->player.speed;
-    /* Ensure the player doesn't move off-screen */
-    if (model->player.y < 0) {
-        model->player.y = 0;
-    }
+
 }
 
 
@@ -336,7 +324,10 @@ void player_collides_with_alien(GameModel *model) {
     for (i = 0; i < ENTITY_COUNT; i++) {
         if (model->aliens[i].active) {
             /* Assuming Alien has width and height same as player's ship */
-            if (hit_detection(model->player.x, model->player.y, 
+            if (hit_detection((model->player.x + BITMAP_WIDTH) - BITMAP_WIDTH / 2, (model->player.y), 
+                              model->aliens[i].x, model->aliens[i].y, 
+                              BITMAP_WIDTH, BITMAP_HEIGHT) || 
+                hit_detection((model->player.x + BITMAP_WIDTH) - BITMAP_WIDTH / 2, (model->player.y + BITMAP_HEIGHT), 
                               model->aliens[i].x, model->aliens[i].y, 
                               BITMAP_WIDTH, BITMAP_HEIGHT)) {
                 /* Collision detected */

@@ -107,13 +107,61 @@ typedef struct {
 } GameModel;
 
 
-/* Function prototypes for initializing and updating the game model */
+/*
+Function: initModel
+Arguments:
+    GameModel *model: Pointer to the game model structure.
+Description:
+    Initializes the game model, setting up the initial state of the game, including player positions, alien positions, and other initial game settings.
+*/
 void initModel(GameModel *model);
+
+/*
+Function: updateModel
+Arguments:
+    GameModel *model: Pointer to the game model structure.
+Description:
+    Updates the entire game model based on the current state of the game. This includes processing player and alien movements, shot positions, and detecting collisions.
+*/
 void updateModel(GameModel *model);
 
+/*
+Function: movePlayer
+Arguments:
+    GameModel *model: Pointer to the game model structure.
+Description:
+    Updates the player's position in the game model, based on player input or game logic.
+*/
 void movePlayer(GameModel *model);
+
+/*
+Function: moveAlien
+Arguments:
+    GameModel *model: Pointer to the game model structure.
+    int alienIndex: Index of the alien in the game model's alien array.
+Description:
+    Moves a specific alien in the game model, based on game logic or AI routines.
+*/
 void moveAlien(GameModel *model, int alienIndex);
+
+/*
+Function: moveAlienShot
+Arguments:
+    GameModel *model: Pointer to the game model structure.
+    int shotIndex: Index of the alien's shot in the game model's shots array.
+Description:
+    Updates the position of a specific alien's shot in the game model, typically moving it toward the player's position.
+*/
 void moveAlienShot(GameModel *model, int shotIndex);
+
+/*
+Function: movePlayerShot
+Arguments:
+    GameModel *model: Pointer to the game model structure.
+    int shotIndex: Index of the player's shot in the game model's shots array.
+Description:
+    Updates the position of a specific player's shot in the game model, typically moving it toward the aliens.
+*/
 void movePlayerShot(GameModel *model, int shotIndex);
 
 extern GameModel model;

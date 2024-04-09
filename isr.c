@@ -28,7 +28,6 @@ void do_VBL_ISR() {
 void clean_isr(){
     install_vector(VBL_VECTOR, orig_vector_vbl);
     install_vector(IKBD_VECTOR, orig_vector_ikbd);
-
 }
 
 /* code from lab 8*/
@@ -49,36 +48,31 @@ void clear_key_buffer() {
     key_buffer_start = key_buffer_end;
 }
 
-
 void do_IKBD_ISR() {
     signed char data_byte;
     int next;
 
-    /* Check if data is available in the ACIA data register */
-    if (ACIA_STATUS_REGISTER & ACIA_STATUS_RX_FULL) {
-        /* Read a byte from the ACIA data register */
-        data_byte = ACIA_DATA_REGISTER;
+    /* Read a byte from the ACIA data register */
+    data_byte = ACIA_DATA_REGISTER;
+
+    /* having troubles, use already made function to check if its a key or mouse value*/
+    if((scancode_to_char(data_byte) == '\0' && menuMusicActive) || mouse_packet_state != 0){
         if (mouse_packet_state == 0) {
             /* First byte of mouse packet (header) */
             mouse_button_state = data_byte;
             mouse_packet_state = 1;
         } else if (mouse_packet_state == 1) {
             /* Second byte of mouse packet (X movement) */
-            mouse_dx_accumulator += (signed char)data_byte;
+            mouse_dx = (int)data_byte;
             mouse_packet_state = 2;
         } else if (mouse_packet_state == 2) {
             /* Third byte of mouse packet (Y movement) */
-            mouse_dy_accumulator += (signed char)data_byte;
+            mouse_dy = (int)data_byte;
             mouse_packet_state = 0;
-            
-            /* Update global mouse_dx and mouse_dy */
-            mouse_dx = mouse_dx_accumulator;
-            mouse_dy = mouse_dy_accumulator;
-
-            /* Reset accumulators for next packet */
-            mouse_dx_accumulator = 0;
-            mouse_dy_accumulator = 0;
+        }else{
+            mouse_packet_state = 0;
         }
+    }else{
         /* Calculate next position in the buffer */
         next = (key_buffer_end + 1) % KEY_BUFFER_SIZE;
         /* If the buffer is full, move the start to make room */
@@ -90,6 +84,9 @@ void do_IKBD_ISR() {
         key_buffer[key_buffer_end] = scancode_to_char(data_byte);
         key_buffer_end = next;
     }
+
+
+
 
     MFP_IN_SERVICE_B_REGISTER &= ~0x40;
 }

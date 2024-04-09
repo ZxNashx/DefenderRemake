@@ -30,7 +30,7 @@ void sound_explosion() {
     set_noise(10);     /* Noise for explosion effect */
     enable_channel(2, 1, 1);  /* Channel B, tone and noise on */
     set_volume(2, 12);        /* Channel B, higher volume for explosion */
-    /* set_envelope(shape, sustain); */ /* Optionally modify the envelope */
+    /* set_envelope(shape, sustain); */ 
 }
 
 /* Sound effect for spaceship damage */
@@ -39,7 +39,7 @@ void sound_spaceship_damage() {
     set_noise(20);     /* Noise for damage effect */
     enable_channel(2, 1, 1);  /* Channel C, tone and noise on */
     set_volume(2, 15);         /* Channel C, medium volume for damage */
-    /* set_envelope(shape, sustain); */ /* Optionally modify the envelope */
+    /* set_envelope(shape, sustain); */ 
 }
 
 /* Sound effect for loss of life */

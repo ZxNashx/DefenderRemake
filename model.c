@@ -1,4 +1,3 @@
-    
 #include "model.h"
 #include "defs.h"
 #include "events.h"
@@ -91,10 +90,22 @@ void updateModel(GameModel *model) {
 }
 
 void movePlayer(GameModel *model) {
-    /* Player will only move vertically */
-    model->player.y += model->player.dy;
+    /* Update player's vertical position */
+    int new_y = model->player.y + model->player.dy;
+    /* Ensure the player doesn't move off-screen */
+    if (new_y < BITMAP_HEIGHT) {
+        new_y = BITMAP_HEIGHT;
+    } else if (new_y + BITMAP_HEIGHT > SCREEN_HEIGHT - BITMAP_HEIGHT) {
+        new_y = SCREEN_HEIGHT - 2 * BITMAP_HEIGHT;
+    }
+
+    /* Set the updated position */
+    model->player.y = new_y;
+
+    /* Update player's horizontal position */
     model->player.map_x_position += model->player.dx;
 }
+
 
 void moveAlien(GameModel *model, int alienIndex) {
     Alien *alien = &model->aliens[alienIndex];
@@ -104,8 +115,18 @@ void moveAlien(GameModel *model, int alienIndex) {
 
 void moveAlienShot(GameModel *model, int shotIndex) {
     AlienShot *as = &model->alienShots[shotIndex];
-    as->x += as->dx  - (model->player.dx);
+
+    as->x += as->dx - model->player.dx;
+    /* some extra difficulty*/
+    if (model->player.score >= 3) {
+        if (as->y < model->player.y) {
+            as->y += 1;
+        } else if (as->y > model->player.y) {
+            as->y -= 1;
+        }
+    }
 }
+
 
 void movePlayerShot(GameModel *model, int shotIndex) {
     PlayerShot *ps = &model->playerShots[shotIndex];

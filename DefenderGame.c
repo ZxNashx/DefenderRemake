@@ -18,9 +18,10 @@
 #include "splash.h"
 #include "isr.h"
 
+
 int run_game() {
     unsigned short soundEffectPlayTime = 0;
-    unsigned short startingEnemyCount = 5;
+    unsigned short startingEnemyCount = 6;
 
     int i;
     initModel(&model);
@@ -30,7 +31,6 @@ int run_game() {
     stop_sound();
     start_music(0, game_song_A, &currentNoteIndex_GameA, &lastNoteTime_GameA);
     start_music(1, game_song_B, &currentNoteIndex_GameB, &lastNoteTime_GameB);
-
 
     model.currentSoundEffect = no_sound_effect;
 
@@ -116,6 +116,9 @@ int main(){
     int splash_screen_result;
     int game_score = 0;
     int high_score = 0;
+    int player_2_score = -1;
+    int pause_timer = 0;
+
     isMuted = false;
 
     orig_buffer = NULL;
@@ -123,24 +126,30 @@ int main(){
 
     /* isr setup */
     init_isr();
-    srand(1234);
+    srand(123);
     while(running){
         mouse_x = SCREEN_WIDTH / 2;
         mouse_y = SCREEN_HEIGHT / 2;
+        mouse_dx = 0;
+        mouse_dy = 0;
         stop_sound();
         /* set the new highscore */
         if(game_score > high_score){
             high_score = game_score;
         }
+        if(player_2_score > high_score){
+            high_score = player_2_score;
+        }
         gameMusicActive = false;
         menuMusicActive = true;
         initialize_buffers();
-        splash_screen_result = create_splash_screen(game_score, high_score);
+        splash_screen_result = create_splash_screen(game_score, high_score, player_2_score);
         menuMusicActive = false;
         gameMusicActive = true;
         /* check splashscreen result*/
         if(splash_screen_result == 1){
             /* singleplayer */
+            player_2_score = -1;
             initialize_buffers();
             running = true;
             game_score = run_game();
@@ -149,6 +158,12 @@ int main(){
             /* coop */
             running = true;
             game_score = run_game();
+            pause_timer = vbl_counter;
+            while(pause_timer + 70 < vbl_counter){
+                /* pause game */
+            }
+            initialize_buffers();
+            player_2_score = run_game();
         }else{
             /* exit */
             running = false;
@@ -160,3 +175,4 @@ int main(){
     clean_isr();
     return 0;
 }
+

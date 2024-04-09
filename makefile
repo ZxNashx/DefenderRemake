@@ -47,7 +47,8 @@ video.o: video.s
 	gen -D -L2 video.s
 isr_asm.o: isr_asm.s
 	gen -D -L2 isr_asm.s
-
+clearq.o: clearq.s
+	gen -D -L2 clearq.s
 input.o: input.c input.h 
 	$(CC) $(CFLAGS) -c input.c
 
@@ -94,8 +95,8 @@ isr.o: isr.c isr.h
 globals.o: globals.c 
 	$(CC) $(CFLAGS) -c globals.c
 # Compile defender game
-defend~1.tos: $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o music.o helper.o effects.o video.o splash.o text.o font.o isr.o isr_asm.o globals.o
-	$(CC) $(CFLAGS) $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o psg.o input.o music.o helper.o effects.o events.o video.o splash.o text.o font.o isr.o isr_asm.o globals.o -o defend~1.tos
+defend~1.tos: $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o events.o psg.o input.o music.o helper.o effects.o video.o splash.o text.o font.o isr.o isr_asm.o globals.o clearq.o
+	$(CC) $(CFLAGS) $(DEFENDERGAME_OBJ) bitmap.o raster.o renderer.o model.o psg.o input.o music.o helper.o effects.o events.o video.o splash.o text.o font.o isr.o isr_asm.o globals.o clearq.o -o defend~1.tos
 
 $(DEFENDERGAME_OBJ): $(DEFENDERGAME_SRC) bitmap.h raster.h renderer.h model.h defs.h psg.h music.h helper.h events.h input.h splash.h text.h font.h isr.h
 	$(CC) $(CFLAGS) -c $(DEFENDERGAME_SRC)

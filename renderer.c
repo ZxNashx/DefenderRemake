@@ -5,6 +5,7 @@
 #include "bitmap.h"
 #include "model.h"
 #include "defs.h"
+#include "text.h"
 
 void clear_region(char *base, int x, int y, int width, int height) {
     int i,j;
@@ -41,6 +42,8 @@ void renderShot(char *base, unsigned int x, unsigned int y) {
 void render(GameModel *model, char *base) {
     int i;
     renderPlayer(&model->player, base);
+
+    plot_number(backBuffer, model->player.score, 500, 10, 1);
 
     for (i = 0; i < ENTITY_COUNT; i++) {
         if (model->aliens[i].active) {
