@@ -1,7 +1,11 @@
 COMP 2659
 Details:
-This is the final atari game. I did not track each game stage. 
+This is the final Atari game. I did not track each game stage. 
 
 Issues:
-	- Mouse moves slow in main menu because I redraw the buffer every frame. 
+	- The mouse moves slowly in the main menu because I redraw the buffer every frame. 
 	- Double def of _enable_channel in isr_asm.o (???)
+Feedback:
+	- Use less / no global.c
+	- _enable_channel error does not matter
+	- Mouse position update / draw should be in ISR. Should function independently from the program.
